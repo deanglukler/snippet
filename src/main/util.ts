@@ -16,5 +16,8 @@ export function resolveHtmlPath(htmlFileName: string) {
 export function getResourcePath(p: string) {
   return app.isPackaged
     ? path.join(process.resourcesPath, p)
-    : path.join(__dirname, '../..', p);
+    : path.join(__dirname, '..', '..', p);
 }
+
+export const isDebug =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';

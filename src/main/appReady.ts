@@ -1,7 +1,8 @@
-import { app, Menu, Tray } from 'electron';
+import { app, BrowserWindow, Menu, Tray } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { getResourcePath } from './util';
+import createWindow from '../lib/win/createWindow';
 
 export default function appReady() {
   // set up tray
@@ -19,8 +20,11 @@ export default function appReady() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open',
-      click: () => {
-        console.log('Open clicked');
+      click: async () => {
+        let window: null | BrowserWindow = await createWindow();
+        window.on('closed', () => {
+          window = null;
+        });
       },
     },
     {
