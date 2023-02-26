@@ -1,0 +1,8 @@
+.homescreen-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.homescreen-form > * {
+  flex: 1 1 100%;
+}

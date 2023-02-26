@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
 /**
@@ -11,6 +12,7 @@
 import { app, ipcMain } from 'electron';
 
 import appReady from './appReady';
+import initIpc from './ipc/initIpc';
 import { isDebug } from './util';
 
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -41,3 +43,5 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(appReady).catch(console.log);
+
+initIpc();
