@@ -2,29 +2,35 @@ import { useState } from 'react';
 import './styles.css';
 
 export default function Homescreen() {
-  const [text, setText] = useState('');
+  const [body, setBody] = useState('');
+  const [title, setTitle] = useState('');
 
   function handlePaste() {
     navigator.clipboard
       .readText()
-      .then(setText)
+      .then(setBody)
       .catch((err) => {
         console.error('Failed to read clipboard contents: ', err);
       });
   }
 
-  function onSubmit() {
+  async function onSubmit() {
     window.electron.ipcRenderer.saveSnippet({
-      body: 'a bunch of stuff',
-      title: 'first snippet',
+      body,
+      title,
     });
   }
 
   return (
     <div>
-      <form onSubmit={onSubmit} className="homescreen-form">
-        <input type="text" placeholder="Enter Title.." />
-        <textarea readOnly value={text} />
+      <form className="homescreen-form">
+        <input
+          type="text"
+          placeholder="Enter Title.."
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
+        <textarea readOnly value={body} />
         <div>
           <button type="button" onClick={handlePaste}>
             paste
