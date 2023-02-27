@@ -1,9 +1,9 @@
-import { ipcMain } from 'electron';
+import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import Loki from 'lokijs';
-import { getResourcePath } from './util';
+import path from 'path';
 
-const DB_PATH = getResourcePath('example.db');
+const DB_PATH = path.join(app.getPath('desktop'), 'SNIP_TEST.lokidb');
 
 function init(db: Loki) {
   const inputValueCollection = db.getCollection('inputValue');
@@ -24,16 +24,7 @@ function init(db: Loki) {
 
 // Check if the database file exists on disk
 if (!fs.existsSync(DB_PATH)) {
-  // Create a new database instance
-  const db = new Loki(DB_PATH, { autosave: true, autosaveInterval: 10 });
-
-  const inputValue = db.addCollection<{ value: string }>('inputValue');
-
-  inputValue.insert({ value: 'initial value' });
-
-  init(db);
-
-  console.log('Initialized new database!');
+  createDatabase();
 } else {
   // Load the existing database from disk
 
@@ -42,4 +33,14 @@ if (!fs.existsSync(DB_PATH)) {
     init(db);
     console.log('Loaded existing database!');
   });
+}
+
+function createDatabase() {
+  const db = new Loki(DB_PATH, { autosave: true, autosaveInterval: 10 });
+
+  const inputValue = db.addCollection<{ value: string }>('inputValue');
+
+  inputValue.insert({ value: 'initial value' });
+
+  console.log('Initialized new database!');
 }

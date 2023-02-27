@@ -4,6 +4,9 @@ import fs from 'fs';
 import { getResourcePath } from './util';
 import createWindow from '../lib/win/createWindow';
 
+// eslint-disable-next-line import/no-mutable-exports
+export let window: null | BrowserWindow;
+
 export default function appReady() {
   // set up tray
   const iconPath = path.join(
@@ -21,7 +24,7 @@ export default function appReady() {
     {
       label: 'Open',
       click: async () => {
-        let window: null | BrowserWindow = await createWindow();
+        window = await createWindow();
         window.on('closed', () => {
           window = null;
         });

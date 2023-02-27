@@ -3,7 +3,10 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { saveSnippet } from '../lib/snippet/invokers';
 
-export type Channels = 'ipc-example' | 'get-input-value' | 'set-input-value';
+export type Channels =
+  | 'ipc-example'
+  | 'IPC:ERROR_IN_MAIN'
+  | 'IPC:SUCCESS_IN_MAIN';
 
 const electronHandler = {
   ipcRenderer: {

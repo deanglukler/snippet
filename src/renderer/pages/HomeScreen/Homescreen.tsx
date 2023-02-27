@@ -1,45 +1,59 @@
-import { useState } from 'react';
+import { Button, Input, Space } from 'antd';
+import { useA, useS } from '../../../lib/store';
+import { logErrorAndToast } from '../../util';
 import './styles.css';
+import TagSelector from './TagSelector';
 
 export default function Homescreen() {
-  const [body, setBody] = useState('');
-  const [title, setTitle] = useState('');
+  const { body, title, tags } = useS((s) => s.snippetUpdater);
+  const { set } = useA((a) => a.snippetUpdater);
 
-  function handlePaste() {
-    navigator.clipboard
-      .readText()
-      .then(setBody)
-      .catch((err) => {
-        console.error('Failed to read clipboard contents: ', err);
-      });
+  async function handlePaste() {
+    try {
+      set({ body: await navigator.clipboard.readText() });
+    } catch (err) {
+      logErrorAndToast('Error pasting');
+    }
   }
 
   async function onSubmit() {
     window.electron.ipcRenderer.saveSnippet({
       body,
       title,
+      metadata: {
+        tags,
+        timestampMili: Date.now(),
+      },
     });
   }
 
   return (
     <div>
-      <form className="homescreen-form">
-        <input
-          type="text"
-          placeholder="Enter Title.."
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-        <textarea readOnly value={body} />
-        <div>
-          <button type="button" onClick={handlePaste}>
-            paste
-          </button>
-          <button type="button" onClick={onSubmit}>
-            submit
-          </button>
-        </div>
-      </form>
+      {!body && (
+        <Button type="text" onClick={handlePaste}>
+          paste
+        </Button>
+      )}
+      {body && (
+        <Space className="homescreen-form">
+          <Input
+            type="text"
+            placeholder="Enter Title.."
+            value={title}
+            onChange={({ target }) => set({ title: target.value })}
+          />
+          <TagSelector />
+          <code>{body}</code>
+          <div>
+            <Button type="text" onClick={handlePaste}>
+              paste
+            </Button>
+            <Button type="primary" onClick={onSubmit}>
+              submit
+            </Button>
+          </div>
+        </Space>
+      )}
     </div>
   );
 }
