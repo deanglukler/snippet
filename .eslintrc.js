@@ -11,7 +11,12 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
-    'no-use-before-define': ['error', { functions: false }],
+    'no-use-before-define': 'off',
+    'func-names': 'off',
+    'max-classes-per-file': 'off',
+    'prefer-destructuring': 'off',
+    'lines-between-class-members': 'off',
+    'react/jsx-no-bind': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
