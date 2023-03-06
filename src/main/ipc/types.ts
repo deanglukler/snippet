@@ -1,1 +1,1 @@
-export type CH = 'snippet:save';
+export type CH = 'snippet:save' | 'search:send';

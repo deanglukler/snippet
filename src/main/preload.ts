@@ -1,12 +1,14 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { sendSearch } from '../lib/search/invokers';
 import { saveSnippet } from '../lib/snippet/invokers';
 
 export type Channels =
   | 'ipc-example'
   | 'IPC:ERROR_IN_MAIN'
-  | 'IPC:SUCCESS_IN_MAIN';
+  | 'IPC:SUCCESS_IN_MAIN'
+  | 'SEARCH:RESULTS';
 
 const electronHandler = {
   ipcRenderer: {
@@ -26,6 +28,7 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
     saveSnippet,
+    sendSearch,
   },
 };
 

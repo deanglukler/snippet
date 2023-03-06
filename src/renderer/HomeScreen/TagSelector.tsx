@@ -1,5 +1,5 @@
 import { Select, SelectProps } from 'antd';
-import { useA } from '../../../lib/store';
+import { useA } from '../../lib/store';
 
 const options: SelectProps['options'] = [
   { value: 'dev tag', label: 'dev tag' },

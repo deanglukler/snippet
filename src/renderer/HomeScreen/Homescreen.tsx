@@ -1,6 +1,7 @@
 import { Button, Input, Space } from 'antd';
-import { useA, useS } from '../../../lib/store';
-import { logErrorAndToast } from '../../util';
+import { useA, useS } from '../../lib/store';
+import { logErrorAndToast } from '../util';
+import Search from './Search';
 import './styles.css';
 import TagSelector from './TagSelector';
 
@@ -30,9 +31,12 @@ export default function Homescreen() {
   return (
     <div>
       {!body && (
-        <Button type="text" onClick={handlePaste}>
-          paste
-        </Button>
+        <>
+          <Button type="text" onClick={handlePaste}>
+            paste
+          </Button>
+          <Search />
+        </>
       )}
       {body && (
         <Space className="homescreen-form">

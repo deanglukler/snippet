@@ -1,13 +1,12 @@
-import { app, IpcMainInvokeEvent } from 'electron';
+import { IpcMainInvokeEvent } from 'electron';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
+import { SNIPPETS } from '../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
 import log from '../util/log';
+import logAndThrow from '../util/logAndThrow';
 import { SnippetData } from './types';
-
-const DOCUMENTS = app.getPath('documents');
-const SNIPPETS = path.join(DOCUMENTS, 'snippets');
 
 export function handleSaveSnippet(
   event: IpcMainInvokeEvent,
@@ -30,16 +29,6 @@ export function handleSaveSnippet(
 //
 //
 //
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function logAndThrow(message: string, ...arg: any[]) {
-  log(message, ...arg);
-  throw message;
-}
-
-function snipDirPath(title: string) {
-  return path.join(SNIPPETS, title);
-}
 
 function writeSnippet(snippet: SnippetData) {
   const snipDir = snipDirPath(snippet.title);
@@ -64,6 +53,10 @@ function writeSnippet(snippet: SnippetData) {
 
 function createSnippetsDirectory() {
   createDirIfNone(SNIPPETS);
+}
+
+function snipDirPath(title: string) {
+  return path.join(SNIPPETS, title);
 }
 
 function createDirIfNone(directory: string) {
