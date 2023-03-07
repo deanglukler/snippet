@@ -1,7 +1,7 @@
 import { IpcMainInvokeEvent } from 'electron';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
-import { SNIPPETS } from '../CONST';
+import { METADATA_FILENAME, SNIPPETS } from '../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
 import log from '../util/log';
@@ -41,7 +41,7 @@ function writeSnippet(snippet: SnippetData) {
 
     // write the metadata file
     writeFileSync(
-      path.join(snipDir, 'metadata.json'),
+      path.join(snipDir, METADATA_FILENAME),
       JSON.stringify(snippet.metadata)
     );
 

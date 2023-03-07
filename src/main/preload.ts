@@ -3,12 +3,14 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { sendSearch } from '../lib/search/invokers';
 import { saveSnippet } from '../lib/snippet/invokers';
+import { getTags } from '../lib/tags/invokers';
 
 export type Channels =
   | 'ipc-example'
   | 'IPC:ERROR_IN_MAIN'
   | 'IPC:SUCCESS_IN_MAIN'
-  | 'SEARCH:RESULTS';
+  | 'SEARCH:RESULTS'
+  | 'TAGS:RESULTS';
 
 const electronHandler = {
   ipcRenderer: {
@@ -29,6 +31,7 @@ const electronHandler = {
     },
     saveSnippet,
     sendSearch,
+    getTags,
   },
 };
 

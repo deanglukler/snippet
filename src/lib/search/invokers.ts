@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
-import { CH } from '../../main/ipc/types';
+import { INVOKERS_CHANNELS } from '../../main/ipc/types';
 
 export function sendSearch(text: string) {
-  ipcRenderer.invoke('search:send' as CH, text);
+  ipcRenderer.invoke('search:send' as INVOKERS_CHANNELS, text);
 }

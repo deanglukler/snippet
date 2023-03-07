@@ -10,6 +10,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import { app, ipcMain } from 'electron';
+import { mainSyncTags } from '../lib/tags/mainSyncTags';
 
 import appReady from './appReady';
 import initIpc from './ipc/initIpc';
@@ -45,3 +46,4 @@ app.on('window-all-closed', () => {
 app.whenReady().then(appReady).catch(console.log);
 
 initIpc();
+mainSyncTags();

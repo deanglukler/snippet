@@ -8,3 +8,9 @@ export interface SnippetData {
   body: string;
   metadata: SnippetMetaData;
 }
+
+export interface SnippetDataSerialized {
+  title: string;
+  body: string;
+  metadata: string;
+}

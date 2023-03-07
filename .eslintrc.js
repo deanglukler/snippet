@@ -24,6 +24,8 @@ module.exports = {
     'import/order': 'off',
     'no-restricted-syntax': 'off',
     'no-await-in-loop': 'off',
+    'import/no-mutable-exports': 'off',
+    'prefer-template': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
