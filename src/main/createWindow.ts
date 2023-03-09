@@ -1,7 +1,7 @@
 import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
-import MenuBuilder from '../../main/menu';
-import { getResourcePath, isDebug, resolveHtmlPath } from '../../main/util';
+import MenuBuilder from './menu';
+import { getResourcePath, isDebug, resolveHtmlPath } from './util';
 
 const createWindow: () => Promise<BrowserWindow> = async () => {
   const installExtensions = async () => {
@@ -34,8 +34,8 @@ const createWindow: () => Promise<BrowserWindow> = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
-        ? getResourcePath(path.join('src', 'main'))
-        : getResourcePath(path.join('.erb', 'dll', 'preload.js')),
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
 

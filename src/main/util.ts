@@ -13,10 +13,10 @@ export function resolveHtmlPath(htmlFileName: string) {
   return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
 
-export function getResourcePath(p: string) {
+export function getResourcePath(...p: string[]) {
   return app.isPackaged
-    ? path.join(process.resourcesPath, p)
-    : path.join(__dirname, '..', '..', p);
+    ? path.join(process.resourcesPath, ...p)
+    : path.join(__dirname, '..', '..', ...p);
 }
 
 export const isDebug =

@@ -1,4 +1,4 @@
-import { IpcMainInvokeEvent } from 'electron';
+import { clipboard, IpcMainInvokeEvent } from 'electron';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../CONST';
@@ -21,13 +21,13 @@ export function handleSaveSnippet(
 
     writeSnippet(snippet);
     successToRenderer('Saved!');
+    return;
   } catch (error) {
     sendErrorToRenderer(error);
+    throw error;
   }
 }
 
-//
-//
 //
 
 function writeSnippet(snippet: SnippetData) {
@@ -68,4 +68,12 @@ function createDirIfNone(directory: string) {
       logAndThrow('Error creating directory.', error);
     }
   }
+}
+
+//
+//
+//
+
+export function handleCopySnippet(_event: IpcMainInvokeEvent, body: string) {
+  clipboard.writeText(body);
 }

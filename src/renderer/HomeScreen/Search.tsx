@@ -1,8 +1,9 @@
-import { Input, List, Typography } from 'antd';
+import { Button, Input, List, Typography } from 'antd';
 import _ from 'lodash';
 import { useEffect } from 'react';
 import { SearchResult } from '../../lib/search/types';
 import { useA, useS } from '../../lib/store';
+import { errorAndToast, successToast } from '../../lib/toast';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -20,6 +21,18 @@ function Search() {
     return off;
   }, [snippetSearchActions]);
 
+  function copySnippet(body: string) {
+    window.electron.ipcRenderer
+      .copySnippet(body)
+      .then(() => {
+        successToast('Copied!');
+        return null;
+      })
+      .catch((err) => {
+        errorAndToast('That didnt work.', err);
+      });
+  }
+
   return (
     <>
       <Input
@@ -33,6 +46,7 @@ function Search() {
           return (
             <List.Item>
               <Typography.Title level={4}>{title}</Typography.Title>
+              <Button onClick={() => copySnippet(body)}>Copy</Button>
               {/* <Typography.Paragraph>{body}</Typography.Paragraph> */}
             </List.Item>
           );

@@ -26,6 +26,8 @@ module.exports = {
     'no-await-in-loop': 'off',
     'import/no-mutable-exports': 'off',
     'prefer-template': 'off',
+    'no-console': ['error', { allow: ['warn', 'error'] }],
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

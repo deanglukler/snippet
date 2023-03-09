@@ -3,5 +3,9 @@ import { INVOKERS_CHANNELS } from '../../main/ipc/types';
 import { SnippetData } from './types';
 
 export function saveSnippet(snippet: SnippetData) {
-  ipcRenderer.invoke('snippet:save' as INVOKERS_CHANNELS, snippet);
+  return ipcRenderer.invoke('snippet:save' as INVOKERS_CHANNELS, snippet);
+}
+
+export function copySnippet(body: string) {
+  return ipcRenderer.invoke('snippet:copy' as INVOKERS_CHANNELS, body);
 }

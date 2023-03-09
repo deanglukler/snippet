@@ -11,7 +11,7 @@ Bugsnag.start({
   plugins: [new BugsnagPluginReact()],
 });
 
-const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
+const ErrorBoundary = Bugsnag.getPlugin('react')!.createErrorBoundary(React);
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

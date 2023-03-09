@@ -1,9 +1,30 @@
-import { Button, Input, Space } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useA, useS } from '../../lib/store';
-import { logErrorAndToast } from '../util';
 import Search from './Search';
 import './styles.css';
 import TagSelector from './TagSelector';
+import * as yup from 'yup';
+import { errorAndToast } from '../../lib/toast';
+
+const allowedFilenameChars = /^[a-zA-Z0-9._-\s]+$/;
+
+const SNIPPET_SCHEMA = yup.object().shape({
+  body: yup.string().required(),
+  title: yup
+    .string()
+    .matches(
+      allowedFilenameChars,
+      'Title can only contain letters, numbers, periods, underscores, and hyphens.'
+    )
+    .required(),
+  metadata: yup
+    .object()
+    .shape({
+      tags: yup.array(),
+      timestampMili: yup.number(),
+    })
+    .required(),
+});
 
 export default function Homescreen() {
   const { body, title, tags } = useS((s) => s.snippetUpdater);
@@ -13,19 +34,40 @@ export default function Homescreen() {
     try {
       set({ body: await navigator.clipboard.readText() });
     } catch (err) {
-      logErrorAndToast('Error pasting');
+      errorAndToast('Error pasting');
     }
   }
 
+  function clearForm() {
+    set({ body: '', title: '', tags: [] });
+  }
+
   async function onSubmit() {
-    window.electron.ipcRenderer.saveSnippet({
+    const snippet = {
       body,
       title,
       metadata: {
         tags,
         timestampMili: Date.now(),
       },
-    });
+    };
+
+    try {
+      SNIPPET_SCHEMA.validateSync(snippet);
+    } catch (error) {
+      errorAndToast((error as any).message);
+      return;
+    }
+
+    window.electron.ipcRenderer
+      .saveSnippet(snippet)
+      .then(() => {
+        clearForm();
+        return null;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   return (
@@ -39,13 +81,15 @@ export default function Homescreen() {
         </>
       )}
       {body && (
-        <Space className="homescreen-form">
-          <Input
-            type="text"
-            placeholder="Enter Title.."
-            value={title}
-            onChange={({ target }) => set({ title: target.value })}
-          />
+        <Form className="homescreen-form">
+          <Form.Item>
+            <Input
+              type="text"
+              placeholder="Enter Title.."
+              value={title}
+              onChange={({ target }) => set({ title: target.value })}
+            />
+          </Form.Item>
           <TagSelector />
           <code>{body}</code>
           <div>
@@ -55,8 +99,9 @@ export default function Homescreen() {
             <Button type="primary" onClick={onSubmit}>
               submit
             </Button>
+            <Button onClick={clearForm}>clear</Button>
           </div>
-        </Space>
+        </Form>
       )}
     </div>
   );

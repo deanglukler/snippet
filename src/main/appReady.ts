@@ -2,7 +2,7 @@ import { app, BrowserWindow, Menu, Tray } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { getResourcePath } from './util';
-import createWindow from '../lib/win/createWindow';
+import createWindow from './createWindow';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let window: null | BrowserWindow;

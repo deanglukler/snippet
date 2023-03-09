@@ -1,1 +1,5 @@
-export type INVOKERS_CHANNELS = 'snippet:save' | 'search:send' | 'tags:get';
+export type INVOKERS_CHANNELS =
+  | 'snippet:save'
+  | 'search:send'
+  | 'tags:get'
+  | 'snippet:copy';
