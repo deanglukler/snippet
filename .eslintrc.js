@@ -28,6 +28,9 @@ module.exports = {
     'prefer-template': 'off',
     'no-console': ['error', { allow: ['warn', 'error'] }],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'react/require-default-props': 'off',
+    radix: 'off',
+    'no-useless-constructor': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

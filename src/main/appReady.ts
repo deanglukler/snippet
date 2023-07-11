@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { getResourcePath } from './util';
 import createWindow from './createWindow';
+import log from '../lib/util/log';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let window: null | BrowserWindow;
@@ -15,7 +16,11 @@ export default function appReady() {
   );
 
   if (!fs.existsSync(iconPath)) {
-    console.log('icon doesnt exist');
+    log('icon doesnt exist');
+  }
+
+  if (process.platform === 'darwin') {
+    app.dock.hide();
   }
 
   const tray = new Tray(iconPath);
@@ -24,10 +29,17 @@ export default function appReady() {
     {
       label: 'Open',
       click: async () => {
-        window = await createWindow();
-        window.on('closed', () => {
-          window = null;
-        });
+        if (window) {
+          window.show();
+        } else {
+          window = await createWindow();
+          window.on('closed', () => {
+            if (process.platform === 'darwin') {
+              app.dock.hide();
+            }
+            window = null;
+          });
+        }
       },
     },
     {

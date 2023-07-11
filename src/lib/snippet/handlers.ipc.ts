@@ -8,7 +8,7 @@ import log from '../util/log';
 import logAndThrow from '../util/logAndThrow';
 import { SnippetData } from './types';
 
-export function handleSaveSnippet(
+export async function handleSaveSnippet(
   event: IpcMainInvokeEvent,
   snippet: SnippetData
 ) {
@@ -74,6 +74,9 @@ function createDirIfNone(directory: string) {
 //
 //
 
-export function handleCopySnippet(_event: IpcMainInvokeEvent, body: string) {
-  clipboard.writeText(body);
+export async function handleCopySnippet(
+  _event: IpcMainInvokeEvent,
+  body: string
+) {
+  return clipboard.writeText(body);
 }

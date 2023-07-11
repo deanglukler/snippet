@@ -1,0 +1,17 @@
+{
+  "token": {
+    "colorPrimary": "#ff8c00",
+    "borderRadius": 15,
+    "fontSizeHeading1": 24,
+    "fontSizeHeading2": 20,
+    "fontSizeHeading3": 18,
+    "fontSizeHeading4": 18,
+    "fontSize": 14,
+    "colorSuccess": "#52c41a",
+    "colorWarning": "#ffc107",
+    "colorError": "#f5222d",
+    "colorInfo": "#1890ff",
+    "colorBgContainer": "#333333",
+    "colorBgElevated": "#333333"
+  }
+}

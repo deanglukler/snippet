@@ -1,11 +1,12 @@
 import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
+import log from '../lib/util/log';
 import MenuBuilder from './menu';
 import { getResourcePath, isDebug, resolveHtmlPath } from './util';
 
 const createWindow: () => Promise<BrowserWindow> = async () => {
   const installExtensions = async () => {
-    // eslint-disable-next-line global-require
+    // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
     const installer = require('electron-devtools-installer');
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     const extensions = ['REACT_DEVELOPER_TOOLS'];
@@ -15,7 +16,7 @@ const createWindow: () => Promise<BrowserWindow> = async () => {
         extensions.map((name) => installer[name]),
         forceDownload
       )
-      .catch(console.log);
+      .catch(log);
   };
   if (isDebug) {
     await installExtensions();
@@ -48,6 +49,9 @@ const createWindow: () => Promise<BrowserWindow> = async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
+      if (process.platform === 'darwin') {
+        app.dock.show();
+      }
       mainWindow.show();
     }
   });

@@ -1,15 +1,14 @@
-import { ipcMain } from 'electron';
-import { handleSearchInput } from '../../lib/search/handlers';
+import { handleSearchInput } from '../../lib/search/handlers.ipc';
 import {
   handleCopySnippet,
   handleSaveSnippet,
-} from '../../lib/snippet/handlers';
-import { handleGetTags } from '../../lib/tags/handlers';
-import { INVOKERS_CHANNELS } from './types';
+} from '../../lib/snippet/handlers.ipc';
+import { handleGetTags } from '../../lib/tags/handlers.ipc';
+import { IPCMainHandler } from './IPCMainHandler';
 
 export default function initIpc() {
-  ipcMain.handle('snippet:save' as INVOKERS_CHANNELS, handleSaveSnippet);
-  ipcMain.handle('snippet:copy' as INVOKERS_CHANNELS, handleCopySnippet);
-  ipcMain.handle('search:send' as INVOKERS_CHANNELS, handleSearchInput);
-  ipcMain.handle('tags:get' as INVOKERS_CHANNELS, handleGetTags);
+  new IPCMainHandler('snippet:save', handleSaveSnippet).handle();
+  new IPCMainHandler('snippet:copy', handleCopySnippet).handle();
+  new IPCMainHandler('search:send', handleSearchInput).handle();
+  new IPCMainHandler('tags:get', handleGetTags).handle();
 }
