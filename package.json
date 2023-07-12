@@ -152,8 +152,8 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "snippet",
-    "appId": "com.deanglueckler.snippet",
+    "productName": "Snippet",
+    "appId": "com.deanglukler.snippet",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -161,6 +161,11 @@
       "node_modules",
       "package.json"
     ],
+    "directories": {
+      "app": "release/app",
+      "buildResources": "assets",
+      "output": "release/build"
+    },
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
       "target": {
@@ -200,11 +205,6 @@
         "AppImage"
       ],
       "category": "Development"
-    },
-    "directories": {
-      "app": "release/app",
-      "buildResources": "assets",
-      "output": "release/build"
     },
     "extraResources": [
       "./assets/**"
