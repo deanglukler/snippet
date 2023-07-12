@@ -4,10 +4,10 @@
 IMAGEMAGICK_COMMAND="convert"
 
 # Specify the input image file
-INPUT_IMAGE="$HOME/__programs/snippet/biz/snippet-mac-icon.png"
+INPUT_IMAGE="path/to/icon.png"
 
 # Specify the output directory where the converted images will be saved
-OUTPUT_DIRECTORY="$HOME/__programs/snippet/biz/icons"
+OUTPUT_DIRECTORY="output/dir"
 
 # Create the output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIRECTORY"
