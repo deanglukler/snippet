@@ -51,7 +51,13 @@ function Search() {
                   title={title}
                   extra={
                     <Space>
-                      <Button danger icon={<DeleteOutlined />} />
+                      <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => {
+                          window.electron.ipcRenderer.deleteSnippet(title);
+                        }}
+                      />
                       <Button onClick={() => copySnippet(body)}>Copy</Button>
                     </Space>
                   }

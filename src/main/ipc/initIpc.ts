@@ -1,6 +1,7 @@
 import { handleSearchInput } from '../../lib/search/handlers.ipc';
 import {
   handleCopySnippet,
+  handleDeleteSnippet,
   handleSaveSnippet,
 } from '../../lib/snippet/handlers.ipc';
 import { handleGetTags } from '../../lib/tags/handlers.ipc';
@@ -10,5 +11,6 @@ export default function initIpc() {
   new IPCMainHandler('snippet:save', handleSaveSnippet).handle();
   new IPCMainHandler('snippet:copy', handleCopySnippet).handle();
   new IPCMainHandler('search:send', handleSearchInput).handle();
+  new IPCMainHandler('snippet:delete', handleDeleteSnippet).handle();
   new IPCMainHandler('tags:get', handleGetTags).handle();
 }

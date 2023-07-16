@@ -1,5 +1,5 @@
 import { clipboard, IpcMainInvokeEvent } from 'electron';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, rmSync } from 'fs';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
@@ -79,4 +79,21 @@ export async function handleCopySnippet(
   body: string
 ) {
   return clipboard.writeText(body);
+}
+
+//
+//
+//
+
+export async function handleDeleteSnippet(
+  _event: IpcMainInvokeEvent,
+  title: string
+) {
+  const snippetDirPath = snipDirPath(title);
+
+  if (!existsSync(snippetDirPath)) {
+    logAndThrow("Can't find snippet to delete");
+  }
+
+  rmSync(snippetDirPath, { recursive: true });
 }

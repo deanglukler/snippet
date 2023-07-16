@@ -4,7 +4,8 @@ export type INVOKERS_CHANNELS =
   | 'snippet:save'
   | 'search:send'
   | 'tags:get'
-  | 'snippet:copy';
+  | 'snippet:copy'
+  | 'snippet:delete';
 
 export type IPCMainHandlerFunction<D, R> = (
   event: IpcMainInvokeEvent,

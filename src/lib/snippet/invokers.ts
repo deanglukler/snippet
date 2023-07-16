@@ -9,3 +9,7 @@ export function saveSnippet(snippet: SnippetData) {
 export function copySnippet(body: string) {
   return ipcRenderer.invoke('snippet:copy' as INVOKERS_CHANNELS, body);
 }
+
+export function deleteSnippet(title: string) {
+  return ipcRenderer.invoke('snippet:delete' as INVOKERS_CHANNELS, title);
+}
