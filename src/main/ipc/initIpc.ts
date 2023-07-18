@@ -5,12 +5,12 @@ import {
   handleSaveSnippet,
 } from '../../lib/snippet/handlers.ipc';
 import { handleGetTags } from '../../lib/tags/handlers.ipc';
-import { IPCMainHandler } from './IPCMainHandler';
+import { IPCMain } from './IPCMainHandler';
 
 export default function initIpc() {
-  new IPCMainHandler('snippet:save', handleSaveSnippet).handle();
-  new IPCMainHandler('snippet:copy', handleCopySnippet).handle();
-  new IPCMainHandler('search:send', handleSearchInput).handle();
-  new IPCMainHandler('snippet:delete', handleDeleteSnippet).handle();
-  new IPCMainHandler('tags:get', handleGetTags).handle();
+  IPCMain.Handle('snippet:save', handleSaveSnippet);
+  IPCMain.Handle('snippet:copy', handleCopySnippet);
+  IPCMain.Handle('search:send', handleSearchInput);
+  IPCMain.Handle('snippet:delete', handleDeleteSnippet);
+  IPCMain.Handle('tags:get', handleGetTags);
 }

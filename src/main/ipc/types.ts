@@ -11,7 +11,3 @@ export type IPCMainHandlerFunction<D, R> = (
   event: IpcMainInvokeEvent,
   data: D
 ) => Promise<R>;
-
-export interface IPCMainHandlerInterface {
-  handle: () => void;
-}

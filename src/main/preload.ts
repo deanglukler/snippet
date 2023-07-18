@@ -2,12 +2,10 @@
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { sendSearch } from '../lib/search/invokers';
-import {
-  copySnippet,
-  saveSnippet,
-  deleteSnippet,
-} from '../lib/snippet/invokers';
+import { copySnippet, deleteSnippet } from '../lib/snippet/invokers';
 import { getTags } from '../lib/tags/invokers';
+import { SnippetData } from '../lib/snippet/types';
+import { INVOKERS_CHANNELS } from './ipc/types';
 
 export type Channels =
   | 'ipc-example'
@@ -33,7 +31,9 @@ const electronHandler = {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
-    saveSnippet,
+    saveSnippet(snippet: SnippetData) {
+      return ipcRenderer.invoke('snippet:save' as INVOKERS_CHANNELS, snippet);
+    },
     copySnippet,
     deleteSnippet,
     sendSearch,

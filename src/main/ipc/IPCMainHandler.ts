@@ -1,19 +1,14 @@
 import { ipcMain } from 'electron';
-import {
-  INVOKERS_CHANNELS,
-  IPCMainHandlerFunction,
-  IPCMainHandlerInterface,
-} from './types';
+import { INVOKERS_CHANNELS } from './types';
 
-export class IPCMainHandler<D = undefined, R = void>
-  implements IPCMainHandlerInterface
-{
-  constructor(
-    private channel: INVOKERS_CHANNELS,
-    private handler: IPCMainHandlerFunction<D, R>
-  ) {}
-
-  handle() {
-    ipcMain.handle(this.channel, this.handler);
+export class IPCMain {
+  static Handle<
+    Channel extends string = INVOKERS_CHANNELS,
+    Handler extends (
+      event: Electron.IpcMainInvokeEvent,
+      ...args: any[]
+    ) => any = () => void
+  >(channel: Channel, handler: Handler) {
+    ipcMain.handle(channel, handler);
   }
 }

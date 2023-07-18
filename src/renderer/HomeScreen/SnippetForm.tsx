@@ -5,7 +5,7 @@ import {
   clearSnippetUpdaterData,
   setSnippetBodyFromClipboard,
 } from '../../lib/storeActions';
-import { onSubmit } from '../../lib/snippet/handlers.events';
+import { SnippetActions } from '../../lib/snippet/SnippetActions';
 
 export default function SnippetForm() {
   const { body, title } = useS((s) => s.snippetUpdater);
@@ -30,7 +30,7 @@ export default function SnippetForm() {
         </Form.Item>
       </Input.Group>
       <Space>
-        <Button type="primary" onClick={onSubmit}>
+        <Button type="primary" onClick={SnippetActions.Submit}>
           Save
         </Button>
         <Button type="dashed" onClick={setSnippetBodyFromClipboard}>
