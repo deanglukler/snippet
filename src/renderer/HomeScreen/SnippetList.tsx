@@ -1,17 +1,18 @@
-import { Button, Card, Divider, Input, List, Space } from 'antd';
+import { Button, Card, Divider, Input, List, Space, Typography } from 'antd';
 import _ from 'lodash';
 import { useS } from '../../lib/store';
 import { errorAndToast, successToast } from '../../lib/toast';
 import NotWide from '../components/NotWide';
 import TruncatedComponent from '../components/TruncatedComponent';
 import { useTheme } from '../hooks';
+import { setSnippetBodyFromClipboard } from '../../lib/storeActions';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
 );
 
-function Search() {
+export default function () {
   const { results } = useS((s) => s.snippetSearch);
 
   const theme = useTheme();
@@ -39,6 +40,14 @@ function Search() {
         />
       </NotWide>
       <Divider />
+      {results.length === 0 && (
+        <Typography.Paragraph>
+          No Snippets Yet.{' '}
+          <Typography.Link onClick={setSnippetBodyFromClipboard}>
+            Create New Snippet.
+          </Typography.Link>
+        </Typography.Paragraph>
+      )}
       <div>
         <List
           dataSource={results}
@@ -63,7 +72,6 @@ function Search() {
                   }
                 >
                   <Space direction="vertical">
-                    {/* <Typography.Title level={4}>{title}</Typography.Title> */}
                     <TruncatedComponent
                       height={150}
                       bgColor={theme.token.colorBgContainer}
@@ -89,5 +97,3 @@ function Search() {
     </>
   );
 }
-
-export default Search;
