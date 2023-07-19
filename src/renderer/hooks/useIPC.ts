@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { SearchResult } from '../../lib/search/types';
 import { useA } from '../../lib/store';
+import { SearchResult } from '../../lib/snippet/types';
 
 export function useIPC() {
   const snippetSearchActions = useA((a) => a.snippetSearch);

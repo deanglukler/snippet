@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useIPC } from '../ipc/hooks';
+import { useIPC } from '../hooks/useIPC';
 import HomescreenLayout from './HomescreenLayout';
 
 export default function Homescreen() {

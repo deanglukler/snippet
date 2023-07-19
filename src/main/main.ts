@@ -10,10 +10,10 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import { app, ipcMain } from 'electron';
-import { mainSyncTags } from '../lib/tags/mainSyncTags';
+import { mainSyncTags } from './appInit/mainSyncTags';
 
 import appReady from './appReady';
-import initIpc from './ipc/initIpc';
+import initIpc from './appInit/initIpc';
 import { isDebug } from './util';
 
 ipcMain.on('ipc-example', async (event, arg) => {

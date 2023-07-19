@@ -12,7 +12,7 @@ const DB_PATH = path.join(
 );
 
 log('DB_PATH: ', DB_PATH);
-const COL = { TAGS: 'tags' };
+const COLLECTION = { TAGS: 'tags' };
 
 let db: Loki;
 if (fs.existsSync(DB_PATH)) {
@@ -26,7 +26,7 @@ if (fs.existsSync(DB_PATH)) {
     log('Created Application Support/Snippet');
   }
   db = new Loki(DB_PATH, { autosave: true, autosaveInterval: 10 });
-  db.addCollection(COL.TAGS);
+  db.addCollection(COLLECTION.TAGS);
 
   log('Initialized new database!');
 }
@@ -34,4 +34,4 @@ if (fs.existsSync(DB_PATH)) {
 const dbPromise = Promise.resolve(db);
 
 export default dbPromise;
-export { COL };
+export { COLLECTION };

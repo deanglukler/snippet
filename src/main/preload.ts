@@ -1,11 +1,8 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { sendSearch } from '../lib/search/invokers';
-import { copySnippet, deleteSnippet } from '../lib/snippet/invokers';
-import { getTags } from '../lib/tags/invokers';
 import { SnippetData } from '../lib/snippet/types';
-import { INVOKERS_CHANNELS } from './ipc/types';
+import { INVOKERS_CHANNELS } from '../types';
 
 export type Channels =
   | 'ipc-example'
@@ -34,10 +31,20 @@ const electronHandler = {
     saveSnippet(snippet: SnippetData) {
       return ipcRenderer.invoke('snippet:save' as INVOKERS_CHANNELS, snippet);
     },
-    copySnippet,
-    deleteSnippet,
-    sendSearch,
-    getTags,
+    copySnippet(body: string) {
+      return ipcRenderer.invoke('snippet:copy' as INVOKERS_CHANNELS, body);
+    },
+    deleteSnippet(title: string) {
+      return ipcRenderer.invoke('snippet:delete' as INVOKERS_CHANNELS, title);
+    },
+    sendSearch(text: string) {
+      ipcRenderer.invoke('search:send' as INVOKERS_CHANNELS, text);
+    },
+    getTags() {
+      return ipcRenderer.invoke('tags:get' as INVOKERS_CHANNELS) as Promise<
+        string[]
+      >;
+    },
   },
 };
 

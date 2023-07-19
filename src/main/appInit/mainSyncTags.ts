@@ -1,8 +1,8 @@
-import { snippets } from '../snippet/util';
-import { SnippetMetaData } from '../snippet/types';
-import dbPromise, { COL } from '../../main/database';
+import { SnippetMetaData } from '../../lib/snippet/types';
+import dbPromise, { COLLECTION } from '../database';
 import _ from 'lodash';
-import log from '../util/log';
+import log from '../../lib/util/log';
+import findSnippetsByTitle from '../../lib/snippet/findSnippetsByTitle';
 
 /**
  * sync the tags found in all files to the database.
@@ -12,7 +12,7 @@ export async function mainSyncTags() {
   // loop through all snippets
   log('SYNC TAGS STARTING...');
   const foundTags: { [key: string]: string } = {};
-  const snipps = await snippets();
+  const snipps = await findSnippetsByTitle();
   snipps.forEach(({ metadata }) => {
     if (_.isNil(metadata)) {
       log('metadata nil');
@@ -26,7 +26,7 @@ export async function mainSyncTags() {
   log('SYNC TAGS: found: ' + _.keys(foundTags).length + ' tags');
 
   const db = await dbPromise;
-  const tagsCollection = db.getCollection(COL.TAGS);
+  const tagsCollection = db.getCollection(COLLECTION.TAGS);
 
   // Clear out the existing tags in the collection
   tagsCollection.clear();

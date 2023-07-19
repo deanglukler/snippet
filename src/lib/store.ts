@@ -1,6 +1,6 @@
 import { action, createStore, createTypedHooks, State } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
-import { SearchResult } from './search/types';
+import { SearchResult } from './snippet/types';
 
 class ActionsBase<T extends object = never> {
   set = action<T, Partial<T>>((state, setter) => {
