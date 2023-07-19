@@ -1,6 +1,5 @@
 import { SNIPPET_SCHEMA } from '../../schema/SNIPPET_SCHEMA';
 import store from '../store';
-import { clearSnippetUpdaterData } from '../storeActions';
 import { errorAndToast } from '../toast';
 
 const submit = () => {
@@ -32,6 +31,27 @@ const submit = () => {
     });
 };
 
+async function setSnippetBodyFromClipboard() {
+  let text = '';
+  try {
+    text = await navigator.clipboard.readText();
+    if (!text) throw new Error('Text in clipboard empty');
+  } catch (err) {
+    errorAndToast(
+      'No text in clipboard.  Copy text to start creating snippet.'
+    );
+  }
+  store
+    .getActions()
+    .snippetUpdater.set({ body: await navigator.clipboard.readText() });
+}
+
+function clearSnippetUpdaterData() {
+  store.getActions().snippetUpdater.set({ body: '', title: '', tags: [] });
+}
+
 export default {
   submit,
+  setSnippetBodyFromClipboard,
+  clearSnippetUpdaterData,
 };

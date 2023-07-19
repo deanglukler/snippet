@@ -1,10 +1,7 @@
 import { Button, Divider, Form, Input, Space } from 'antd';
 import TagSelector from './TagSelector';
 import store, { useS } from '../../lib/store';
-import {
-  clearSnippetUpdaterData,
-  setSnippetBodyFromClipboard,
-} from '../../lib/storeActions';
+
 import SnippetActions from '../../lib/snippet/SnippetActions';
 
 export default function SnippetForm() {
@@ -33,10 +30,13 @@ export default function SnippetForm() {
         <Button type="primary" onClick={SnippetActions.submit}>
           Save
         </Button>
-        <Button type="dashed" onClick={setSnippetBodyFromClipboard}>
+        <Button
+          type="dashed"
+          onClick={SnippetActions.setSnippetBodyFromClipboard}
+        >
           Re-Paste
         </Button>
-        <Button type="text" onClick={clearSnippetUpdaterData}>
+        <Button type="text" onClick={SnippetActions.clearSnippetUpdaterData}>
           Cancel
         </Button>
       </Space>

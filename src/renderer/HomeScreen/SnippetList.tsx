@@ -5,8 +5,8 @@ import { errorAndToast, successToast } from '../../lib/toast';
 import NotWide from '../components/NotWide';
 import TruncatedComponent from '../components/TruncatedComponent';
 import { useTheme } from '../hooks';
-import { setSnippetBodyFromClipboard } from '../../lib/storeActions';
 import { DeleteOutlined } from '@ant-design/icons';
+import SnippetActions from '../../lib/snippet/SnippetActions';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -43,7 +43,7 @@ export default function () {
       {results.length === 0 && (
         <Typography.Paragraph>
           No Snippets Yet.{' '}
-          <Typography.Link onClick={setSnippetBodyFromClipboard}>
+          <Typography.Link onClick={SnippetActions.setSnippetBodyFromClipboard}>
             Create New Snippet.
           </Typography.Link>
         </Typography.Paragraph>

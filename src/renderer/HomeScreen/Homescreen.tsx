@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useIPC } from '../hooks/useIPC';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { setSnippetBodyFromClipboard } from '../../lib/storeActions';
 import SnippetForm from './SnippetForm';
 import { useS } from '../../lib/store';
 import SnippetList from './SnippetList';
+import SnippetActions from '../../lib/snippet/SnippetActions';
 
 export default function Homescreen() {
   useIPC();
@@ -35,7 +35,7 @@ export default function Homescreen() {
             style={{ position: 'absolute', top: '15px', right: '15px' }}
             type="dashed"
             icon={<PlusOutlined />}
-            onClick={setSnippetBodyFromClipboard}
+            onClick={SnippetActions.setSnippetBodyFromClipboard}
           >
             New Snippet
           </Button>
