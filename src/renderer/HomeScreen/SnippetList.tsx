@@ -1,21 +1,32 @@
 import { Button, Card, Divider, Input, List, Space, Typography } from 'antd';
 import _ from 'lodash';
-import { useS } from '../../lib/store';
+import { useA, useS } from '../../lib/store';
 import { errorAndToast, successToast } from '../../lib/toast';
 import NotWide from '../components/NotWide';
 import TruncatedComponent from '../components/TruncatedComponent';
 import { useTheme } from '../hooks';
 import { DeleteOutlined } from '@ant-design/icons';
 import SnippetActions from '../../lib/snippet/SnippetActions';
+import { useEffect } from 'react';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
 );
 
 export default function () {
-  const { results } = useS((s) => s.snippetSearch);
-
+  const { results, searchText } = useS((s) => s.snippetSearch);
+  const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const theme = useTheme();
+
+  useEffect(() => {
+    const searchTimer = setInterval(() => {
+      debouncedSearch(searchText);
+    }, 500);
+
+    return () => {
+      clearInterval(searchTimer);
+    };
+  });
 
   function copySnippet(body: string) {
     window.electron.ipcRenderer
@@ -34,8 +45,9 @@ export default function () {
       <NotWide>
         <Input
           onChange={(e) => {
-            debouncedSearch(e.target.value);
+            setSnippetSearch({ searchText: e.target.value });
           }}
+          value={searchText}
           placeholder="Search snippets"
         />
       </NotWide>
