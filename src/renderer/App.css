@@ -3,9 +3,14 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   color-scheme: dark light;
 }
+
 body {
   position: relative;
 }

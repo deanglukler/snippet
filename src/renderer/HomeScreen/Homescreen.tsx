@@ -22,7 +22,7 @@ export default function Homescreen() {
   return (
     <div
       style={{
-        minWidth: '300px',
+        minWidth: '515px',
         maxWidth: '800px',
         margin: '0 auto',
         position: 'relative',
