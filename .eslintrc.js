@@ -31,6 +31,7 @@ module.exports = {
     'react/require-default-props': 'off',
     radix: 'off',
     'no-useless-constructor': 'off',
+    'no-plusplus': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -2,8 +2,9 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../CONST';
 import log from '../util/log';
-import { SnippetDataSerialized } from './types';
+import { SnippetDataSerialized, SnippetMetaData } from './types';
 import FuzzySearch from 'fuzzy-search';
+import logAndThrow from '../util/logAndThrow';
 
 export default async function (searchText?: string) {
   async function snippetContainers() {
@@ -26,25 +27,51 @@ export default async function (searchText?: string) {
     return results;
   }
 
-  const containers = await snippetContainers();
-
-  const searcher = new FuzzySearch(containers);
-  const result = searchText ? searcher.search(searchText) : containers;
-
-  const bodyResults = await readFilesAsyncHelper(
-    result.map((f) => path.join(SNIPPETS, f, f))
-  );
-
-  const metadataResults = await readFilesAsyncHelper(
-    result.map((f) => path.join(SNIPPETS, f, METADATA_FILENAME))
-  );
-
-  const returnableResults: SnippetDataSerialized[] = result.map((title, i) => {
+  function safelyParseMetadata(fileContent: string): SnippetMetaData {
+    let partialMetadata: Partial<SnippetMetaData> = {};
+    try {
+      partialMetadata = JSON.parse(fileContent) as Partial<SnippetMetaData>;
+    } catch (err) {
+      log(err);
+    }
     return {
-      title,
-      body: bodyResults[i],
-      metadata: metadataResults[i],
+      tags: partialMetadata.tags || [],
+      timestampMili: partialMetadata.timestampMili || 0,
     };
+  }
+
+  const snippetTitles = await snippetContainers();
+  const snippetBodies = await readFilesAsyncHelper(
+    snippetTitles.map((f) => path.join(SNIPPETS, f, f))
+  );
+  const snippetMetadatasUnparsed = await readFilesAsyncHelper(
+    snippetTitles.map((f) => path.join(SNIPPETS, f, METADATA_FILENAME))
+  );
+  const snippetMetadatas = snippetMetadatasUnparsed.map(safelyParseMetadata);
+
+  const snippets: { [key: string]: SnippetDataSerialized } = {};
+  for (let i = 0; i < snippetTitles.length; i++) {
+    const title = snippetTitles[i];
+    const body = snippetBodies[i];
+    const metadata = snippetMetadatas[i];
+    const searchableKeyName = title + body + metadata.tags.join(' ');
+    snippets[searchableKeyName] = {
+      title,
+      body,
+      metadata: JSON.stringify(metadata),
+    };
+  }
+
+  const searchableKeyNames = Object.keys(snippets);
+  const searcher = new FuzzySearch(searchableKeyNames);
+  const results = searchText ? searcher.search(searchText) : searchableKeyNames;
+
+  const returnableResults: SnippetDataSerialized[] = results.map((k) => {
+    const snippetData = snippets[k];
+    if (!snippetData) {
+      logAndThrow('Assert: Snippet Data should exist.');
+    }
+    return snippets[k];
   });
   return returnableResults;
 }
