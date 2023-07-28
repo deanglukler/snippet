@@ -7,7 +7,7 @@ import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
 import log from '../util/log';
 import logAndThrow from '../util/logAndThrow';
-import { SearchResult, SnippetData, TagList } from './types';
+import { SnippetData, SnippetDataSerialized, TagList } from './types';
 import { IPCMainHandlerFunction } from '../../types';
 
 import dataToRenderer from '../toRenderer/dataToRenderer';
@@ -88,7 +88,8 @@ const deleteSnippet: IPCMainHandlerFunction<string> = async (_event, title) => {
 
 const search: IPCMainHandlerFunction<string> = async (_event, text) => {
   try {
-    const returnableResults: SearchResult[] = await findSnippetsByTitle(text);
+    const returnableResults: SnippetDataSerialized[] =
+      await findSnippetsByTitle(text);
 
     dataToRenderer('SEARCH:RESULTS', returnableResults);
   } catch (error) {

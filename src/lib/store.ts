@@ -1,6 +1,6 @@
 import { action, createStore, createTypedHooks, State } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
-import { SearchResult } from './snippet/types';
+import { SnippetData } from './snippet/types';
 
 class ActionsBase<T extends object = never> {
   set = action<T, Partial<T>>((state, setter) => {
@@ -21,7 +21,7 @@ class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
 
 class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
   searchText = '';
-  results: SearchResult[] = [];
+  results: SnippetData[] = [];
 }
 
 interface StoreModel {

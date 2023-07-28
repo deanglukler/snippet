@@ -3,6 +3,12 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
+:root {
+  --lighter-gray: #fafafa;
+  --light-gray: #f0f0f0;
+  --gray: #7d7d7d;
+}
+
 * {
   box-sizing: border-box;
 }

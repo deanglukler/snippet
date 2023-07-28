@@ -15,9 +15,4 @@ export interface SnippetDataSerialized {
   metadata: string;
 }
 
-export interface SearchResult {
-  title: string;
-  body: string;
-}
-
 export type TagList = string[];

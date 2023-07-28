@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Input, List, Space, Typography } from 'antd';
+import { Button, Divider, Input, Space, Typography } from 'antd';
 import _ from 'lodash';
 import { useA, useS } from '../../lib/store';
 import { errorAndToast, successToast } from '../../lib/toast';
@@ -61,16 +61,31 @@ export default function () {
         </Typography.Paragraph>
       )}
       <div>
-        <List
-          dataSource={results}
-          renderItem={({ title, body }) => {
+        <div>
+          {results.map(({ title, body, metadata }) => {
             return (
-              <List.Item>
-                <Card
-                  bordered={false}
-                  style={{ width: '100%' }}
-                  title={title}
-                  extra={
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  backgroundColor: 'var(--lighter-gray)',
+                  padding: '15px 25px',
+                  borderRadius: '17px',
+                  marginBottom: '20px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    height: '55px',
+                  }}
+                >
+                  <Typography.Title level={4} style={{ margin: 0 }}>
+                    {title}
+                  </Typography.Title>
+                  <div>
                     <Space>
                       <Button
                         danger
@@ -81,8 +96,33 @@ export default function () {
                       />
                       <Button onClick={() => copySnippet(body)}>Copy</Button>
                     </Space>
-                  }
-                >
+                  </div>
+                </div>
+                {metadata.tags.length > 0 && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '8px',
+                      paddingBottom: '10px',
+                    }}
+                  >
+                    {metadata.tags.map((tag) => {
+                      return (
+                        <Typography.Text style={{ color: 'var(--gray)' }}>
+                          # {tag}
+                        </Typography.Text>
+                      );
+                    })}
+                  </div>
+                )}
+                <div
+                  style={{
+                    borderBottom: '1px solid var(--light-gray)',
+                    height: '1px',
+                  }}
+                />
+
+                <div>
                   <Space direction="vertical">
                     <TruncatedComponent
                       height={150}
@@ -99,12 +139,11 @@ export default function () {
                       </pre>
                     </TruncatedComponent>
                   </Space>
-                </Card>
-              </List.Item>
+                </div>
+              </div>
             );
-          }}
-          locale={{ emptyText: ' ' }}
-        />
+          })}
+        </div>
       </div>
     </>
   );

@@ -2,9 +2,10 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../CONST';
 import log from '../util/log';
-import { SnippetDataSerialized, SnippetMetaData } from './types';
+import { SnippetDataSerialized } from './types';
 import FuzzySearch from 'fuzzy-search';
 import logAndThrow from '../util/logAndThrow';
+import safelyParseMetadata from './safelyParseSnippetMetadata';
 
 export default async function (searchText?: string) {
   async function snippetContainers() {
@@ -25,19 +26,6 @@ export default async function (searchText?: string) {
       }
     }
     return results;
-  }
-
-  function safelyParseMetadata(fileContent: string): SnippetMetaData {
-    let partialMetadata: Partial<SnippetMetaData> = {};
-    try {
-      partialMetadata = JSON.parse(fileContent) as Partial<SnippetMetaData>;
-    } catch (err) {
-      log(err);
-    }
-    return {
-      tags: partialMetadata.tags || [],
-      timestampMili: partialMetadata.timestampMili || 0,
-    };
   }
 
   const snippetTitles = await snippetContainers();

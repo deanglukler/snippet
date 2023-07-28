@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { useA, useS } from '../../lib/store';
-import { SearchResult } from '../../lib/snippet/types';
+import { SnippetData, SnippetDataSerialized } from '../../lib/snippet/types';
 import _ from 'lodash';
+import safelyParseMetadata from '../../lib/snippet/safelyParseSnippetMetadata';
 
 export function useIPC() {
   const snippetSearchActions = useA((a) => a.snippetSearch);
   const snippetSearchResults = useS((s) => s.snippetSearch.results);
   useEffect(() => {
     const off = window.electron.ipcRenderer.on('SEARCH:RESULTS', (args) => {
-      const nextResults = args as SearchResult[];
+      const nextResults = args as SnippetDataSerialized[];
       let resultsAreTheSame = true;
       if (snippetSearchResults.length !== nextResults.length)
         resultsAreTheSame = false;
@@ -21,8 +22,12 @@ export function useIPC() {
           resultsAreTheSame = false;
       }
 
+      const nextResultsParsed: SnippetData[] = nextResults.map((res) => {
+        return { ...res, metadata: safelyParseMetadata(res.metadata) };
+      });
+
       if (!resultsAreTheSame) {
-        snippetSearchActions.set({ results: nextResults });
+        snippetSearchActions.set({ results: nextResultsParsed });
       }
     });
 
