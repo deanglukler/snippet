@@ -1,6 +1,5 @@
 import { Button, Divider, Input, Space, Typography } from 'antd';
 import _ from 'lodash';
-import { useA, useS } from '../../lib/store';
 import { errorAndToast, successToast } from '../../lib/toast';
 import NotWide from '../components/NotWide';
 import TruncatedComponent from '../components/TruncatedComponent';
@@ -8,6 +7,8 @@ import { useTheme } from '../hooks';
 import { DeleteOutlined } from '@ant-design/icons';
 import SnippetActions from '../../lib/snippet/SnippetActions';
 import { useEffect } from 'react';
+import store, { useA, useS } from '../../lib/store';
+import TagSelector from './TagSelector';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -15,6 +16,7 @@ const debouncedSearch = _.debounce((text: string) =>
 
 export default function () {
   const { results, searchText } = useS((s) => s.snippetSearch);
+  const snippetUpdater = useS((s) => s.snippetUpdater);
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const theme = useTheme();
 
@@ -62,6 +64,61 @@ export default function () {
       )}
       <div>
         <div>
+          {snippetUpdater.body && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'var(--lighter-gray)',
+                padding: '15px 25px',
+                borderRadius: '17px',
+                marginBottom: '20px',
+              }}
+            >
+              <div
+                style={{
+                  paddingBottom: '20px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Space direction="vertical" style={{ width: '300px' }}>
+                  <Input
+                    type="text"
+                    placeholder="Title"
+                    value={snippetUpdater.title}
+                    onChange={({ target }) =>
+                      store
+                        .getActions()
+                        .snippetUpdater.set({ title: target.value })
+                    }
+                  />
+                  <TagSelector />
+                </Space>
+                <Space>
+                  <Button
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={SnippetActions.clearSnippetUpdaterData}
+                  />
+                  <Button
+                    type="dashed"
+                    onClick={SnippetActions.setSnippetBodyFromClipboard}
+                  >
+                    Re-Paste
+                  </Button>
+
+                  <Button type="primary" onClick={SnippetActions.submit}>
+                    Save
+                  </Button>
+                </Space>
+              </div>
+              <HorizontalLine />
+              <div>
+                <SnippetBody body={snippetUpdater.body} theme={theme} />
+              </div>
+            </div>
+          )}
           {results.map(({ title, body, metadata }) => {
             return (
               <div
@@ -73,6 +130,7 @@ export default function () {
                   borderRadius: '17px',
                   marginBottom: '20px',
                 }}
+                key={title}
               >
                 <div
                   style={{
@@ -108,37 +166,20 @@ export default function () {
                   >
                     {metadata.tags.map((tag) => {
                       return (
-                        <Typography.Text style={{ color: 'var(--gray)' }}>
+                        <Typography.Text
+                          key={tag}
+                          style={{ color: 'var(--gray)' }}
+                        >
                           # {tag}
                         </Typography.Text>
                       );
                     })}
                   </div>
                 )}
-                <div
-                  style={{
-                    borderBottom: '1px solid var(--light-gray)',
-                    height: '1px',
-                  }}
-                />
+                <HorizontalLine />
 
                 <div>
-                  <Space direction="vertical">
-                    <TruncatedComponent
-                      height={150}
-                      bgColor={theme.token.colorBgContainer}
-                    >
-                      <pre
-                        style={{
-                          whiteSpace: 'pre-wrap',
-                          fontSize: '0.9rem',
-                          lineHeight: '1.4',
-                        }}
-                      >
-                        {body}
-                      </pre>
-                    </TruncatedComponent>
-                  </Space>
+                  <SnippetBody body={body} theme={theme} />
                 </div>
               </div>
             );
@@ -146,5 +187,34 @@ export default function () {
         </div>
       </div>
     </>
+  );
+}
+
+function SnippetBody({ body, theme }: { body: string; theme: any }) {
+  return (
+    <Space direction="vertical">
+      <TruncatedComponent height={150} bgColor={theme.token.colorBgContainer}>
+        <pre
+          style={{
+            whiteSpace: 'pre-wrap',
+            fontSize: '0.9rem',
+            lineHeight: '1.4',
+          }}
+        >
+          {body}
+        </pre>
+      </TruncatedComponent>
+    </Space>
+  );
+}
+
+function HorizontalLine() {
+  return (
+    <div
+      style={{
+        borderBottom: '1px solid var(--light-gray)',
+        height: '1px',
+      }}
+    />
   );
 }
