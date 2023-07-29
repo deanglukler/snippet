@@ -1,0 +1,7 @@
+.snippet-body:hover .expand-button {
+  display: unset;
+}
+
+.expand-button {
+  display: none;
+}

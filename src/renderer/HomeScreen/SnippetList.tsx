@@ -2,7 +2,6 @@ import { Button, Divider, Input, InputRef, Space, Typography } from 'antd';
 import _ from 'lodash';
 import { errorAndToast, successToast } from '../../lib/toast';
 import NotWide from '../components/NotWide';
-import TruncatedComponent from '../components/TruncatedComponent';
 import { useTheme } from '../hooks';
 import {
   DeleteOutlined,
@@ -16,6 +15,7 @@ import TagSelector from './TagSelector';
 import DeleteButton from '../components/DeleteButton';
 import './SnippetList.css';
 import AnimatedBorderBox from '../components/AnimatedBorderBox';
+import SnippetBody from '../components/SnippetBody';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -213,35 +213,6 @@ export default function () {
         </div>
       </div>
     </>
-  );
-}
-
-function SnippetBody({
-  body,
-  theme,
-  truncateHeight = 150,
-}: {
-  body: string;
-  theme: any;
-  truncateHeight?: number;
-}) {
-  return (
-    <Space direction="vertical">
-      <TruncatedComponent
-        height={truncateHeight}
-        bgColor={theme.token.colorBgContainer}
-      >
-        <pre
-          style={{
-            whiteSpace: 'pre-wrap',
-            fontSize: '0.9rem',
-            lineHeight: '1.4',
-          }}
-        >
-          {body}
-        </pre>
-      </TruncatedComponent>
-    </Space>
   );
 }
 
