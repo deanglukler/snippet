@@ -46,12 +46,23 @@ async function setSnippetBodyFromClipboard() {
     .snippetUpdater.set({ body: await navigator.clipboard.readText() });
 }
 
+function setNewSnippetTitleToDefault() {
+  store.getActions().snippetUpdater.set({ title: 'Snippet Title...' });
+}
+
 function clearSnippetUpdaterData() {
   store.getActions().snippetUpdater.set({ body: '', title: '', tags: [] });
+}
+
+function initializeNew() {
+  setNewSnippetTitleToDefault();
+  setSnippetBodyFromClipboard();
 }
 
 export default {
   submit,
   setSnippetBodyFromClipboard,
+  setNewSnippetTitleToDefault,
+  initializeNew,
   clearSnippetUpdaterData,
 };

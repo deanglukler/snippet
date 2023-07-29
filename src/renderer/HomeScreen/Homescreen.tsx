@@ -29,7 +29,7 @@ export default function Homescreen() {
         style={{ position: 'absolute', top: '15px', right: '15px' }}
         type="dashed"
         icon={<PlusOutlined />}
-        onClick={SnippetActions.setSnippetBodyFromClipboard}
+        onClick={SnippetActions.initializeNew}
       >
         New Snippet
       </Button>

@@ -1,12 +1,16 @@
-import { Button, Divider, Input, Space, Typography } from 'antd';
+import { Button, Divider, Input, InputRef, Space, Typography } from 'antd';
 import _ from 'lodash';
 import { errorAndToast, successToast } from '../../lib/toast';
 import NotWide from '../components/NotWide';
 import TruncatedComponent from '../components/TruncatedComponent';
 import { useTheme } from '../hooks';
-import { DeleteOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  CheckCircleOutlined,
+  CopyOutlined,
+} from '@ant-design/icons';
 import SnippetActions from '../../lib/snippet/SnippetActions';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import store, { useA, useS } from '../../lib/store';
 import TagSelector from './TagSelector';
 
@@ -19,6 +23,21 @@ export default function () {
   const snippetUpdater = useS((s) => s.snippetUpdater);
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const theme = useTheme();
+
+  const newSnippetTitleInputRef = useRef<InputRef>(null);
+  const prevNewSnippetTitleInputRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (
+      newSnippetTitleInputRef.current &&
+      !prevNewSnippetTitleInputRef.current
+    ) {
+      newSnippetTitleInputRef.current.focus({
+        cursor: 'all',
+      });
+    }
+    prevNewSnippetTitleInputRef.current = newSnippetTitleInputRef.current;
+  });
 
   useEffect(() => {
     const searchTimer = setInterval(() => {
@@ -57,7 +76,7 @@ export default function () {
       {results.length === 0 && (
         <Typography.Paragraph>
           No Snippets Yet.{' '}
-          <Typography.Link onClick={SnippetActions.setSnippetBodyFromClipboard}>
+          <Typography.Link onClick={SnippetActions.initializeNew}>
             Create New Snippet.
           </Typography.Link>
         </Typography.Paragraph>
@@ -80,12 +99,17 @@ export default function () {
                   paddingBottom: '20px',
                   display: 'flex',
                   justifyContent: 'space-between',
+                  alignItems: 'start',
                 }}
               >
                 <Space direction="vertical" style={{ width: '300px' }}>
                   <Input
+                    ref={newSnippetTitleInputRef}
                     type="text"
-                    placeholder="Title"
+                    placeholder="Snippet Title"
+                    bordered={false}
+                    size="large"
+                    style={{ fontWeight: 600, paddingLeft: 0 }}
                     value={snippetUpdater.title}
                     onChange={({ target }) =>
                       store
@@ -102,13 +126,11 @@ export default function () {
                     onClick={SnippetActions.clearSnippetUpdaterData}
                   />
                   <Button
-                    type="dashed"
-                    onClick={SnippetActions.setSnippetBodyFromClipboard}
+                    disabled={!snippetUpdater.isValid}
+                    type="primary"
+                    icon={<CheckCircleOutlined />}
+                    onClick={SnippetActions.submit}
                   >
-                    Re-Paste
-                  </Button>
-
-                  <Button type="primary" onClick={SnippetActions.submit}>
                     Save
                   </Button>
                 </Space>
@@ -144,16 +166,12 @@ export default function () {
                     {title}
                   </Typography.Title>
                   <div>
-                    <Space>
-                      <Button
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => {
-                          window.electron.ipcRenderer.deleteSnippet(title);
-                        }}
-                      />
-                      <Button onClick={() => copySnippet(body)}>Copy</Button>
-                    </Space>
+                    <Button
+                      icon={<CopyOutlined />}
+                      onClick={() => copySnippet(body)}
+                    >
+                      Copy
+                    </Button>
                   </div>
                 </div>
                 {metadata.tags.length > 0 && (
@@ -180,6 +198,18 @@ export default function () {
 
                 <div>
                   <SnippetBody body={body} theme={theme} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                  <Button
+                    icon={<DeleteOutlined />}
+                    type="text"
+                    size="small"
+                    onClick={() => {
+                      window.electron.ipcRenderer.deleteSnippet(title);
+                    }}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </div>
             );

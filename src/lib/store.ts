@@ -1,4 +1,11 @@
-import { action, createStore, createTypedHooks, State } from 'easy-peasy';
+import {
+  action,
+  Computed,
+  computed,
+  createStore,
+  createTypedHooks,
+  State,
+} from 'easy-peasy';
 import { createLogger } from 'redux-logger';
 import { SnippetData } from './snippet/types';
 
@@ -17,6 +24,14 @@ class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
   body = '';
   title = '';
   tags: string[] = [];
+  isValid: Computed<SnippetUpdaterModel, boolean> = computed<
+    SnippetUpdaterModel,
+    boolean
+  >((state) => {
+    if (!state.title) return false;
+    if (!state.body) return false;
+    return true;
+  });
 }
 
 class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
