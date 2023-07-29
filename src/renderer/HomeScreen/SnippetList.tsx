@@ -14,6 +14,8 @@ import { useEffect, useRef } from 'react';
 import store, { useA, useS } from '../../lib/store';
 import TagSelector from './TagSelector';
 import DeleteButton from '../components/DeleteButton';
+import './SnippetList.css';
+import AnimatedBorderBox from '../components/AnimatedBorderBox';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -24,7 +26,6 @@ export default function () {
   const snippetUpdater = useS((s) => s.snippetUpdater);
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const theme = useTheme();
-
   const newSnippetTitleInputRef = useRef<InputRef>(null);
   const prevNewSnippetTitleInputRef = useRef<any>(null);
 
@@ -84,84 +85,76 @@ export default function () {
       )}
       <div>
         <div>
+          {snippetUpdater.bodyPreview && (
+            <AnimatedBorderBox>
+              <div className="list-card">
+                <Typography.Title level={3}>
+                  Clipboard Preview:
+                </Typography.Title>
+                <SnippetBody
+                  body={snippetUpdater.bodyPreview}
+                  theme={theme}
+                  truncateHeight={500}
+                />
+              </div>
+            </AnimatedBorderBox>
+          )}
           {snippetUpdater.body && (
-            <div className="box-outer">
+            <AnimatedBorderBox>
               <div
                 style={{
+                  paddingBottom: '20px',
                   display: 'flex',
-                  flexDirection: 'column',
-                  backgroundColor: 'var(--lighter-gray)',
-                  padding: '15px 25px',
-                  borderRadius: '17px',
-                  marginBottom: '20px',
+                  justifyContent: 'space-between',
+                  alignItems: 'start',
                 }}
-                className="main-box"
               >
-                <div className="bar top" />
-                <div className="bar right delay" />
-                <div className="bar bottom delay" />
-                <div className="bar left" />
-                <div
-                  style={{
-                    paddingBottom: '20px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'start',
-                  }}
-                >
-                  <Space direction="vertical" style={{ width: '300px' }}>
-                    <Input
-                      ref={newSnippetTitleInputRef}
-                      type="text"
-                      placeholder="Snippet Title"
-                      bordered={false}
-                      size="large"
-                      style={{ fontWeight: 600, paddingLeft: 0 }}
-                      value={snippetUpdater.title}
-                      onChange={({ target }) =>
-                        store
-                          .getActions()
-                          .snippetUpdater.set({ title: target.value })
-                      }
-                    />
-                    <TagSelector />
-                  </Space>
-                  <Space>
-                    <Button
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={SnippetActions.clearSnippetUpdaterData}
-                    />
-                    <Button
-                      disabled={!snippetUpdater.isValid}
-                      type="primary"
-                      icon={<CheckCircleOutlined />}
-                      onClick={SnippetActions.submit}
-                    >
-                      Save
-                    </Button>
-                  </Space>
-                </div>
-                <HorizontalLine />
-                <div>
-                  <SnippetBody body={snippetUpdater.body} theme={theme} />
-                </div>
+                <Space direction="vertical" style={{ width: '300px' }}>
+                  <Input
+                    ref={newSnippetTitleInputRef}
+                    type="text"
+                    placeholder="Snippet Title"
+                    bordered={false}
+                    size="large"
+                    style={{ fontWeight: 600, paddingLeft: 0 }}
+                    value={snippetUpdater.title}
+                    onChange={({ target }) =>
+                      store
+                        .getActions()
+                        .snippetUpdater.set({ title: target.value })
+                    }
+                  />
+                  <TagSelector />
+                </Space>
+                <Space>
+                  <Button
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={SnippetActions.clearSnippetUpdaterData}
+                  />
+                  <Button
+                    disabled={!snippetUpdater.isValid}
+                    type="primary"
+                    icon={<CheckCircleOutlined />}
+                    onClick={SnippetActions.submit}
+                  >
+                    Save
+                  </Button>
+                </Space>
               </div>
-            </div>
+              <HorizontalLine />
+              <div>
+                <SnippetBody
+                  body={snippetUpdater.body}
+                  theme={theme}
+                  truncateHeight={500}
+                />
+              </div>
+            </AnimatedBorderBox>
           )}
           {results.map(({ title, body, metadata }) => {
             return (
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  backgroundColor: 'var(--lighter-gray)',
-                  padding: '15px 25px',
-                  borderRadius: '17px',
-                  marginBottom: '20px',
-                }}
-                key={title}
-              >
+              <div className="list-card" key={title}>
                 <div
                   style={{
                     display: 'flex',
@@ -223,10 +216,21 @@ export default function () {
   );
 }
 
-function SnippetBody({ body, theme }: { body: string; theme: any }) {
+function SnippetBody({
+  body,
+  theme,
+  truncateHeight = 150,
+}: {
+  body: string;
+  theme: any;
+  truncateHeight?: number;
+}) {
   return (
     <Space direction="vertical">
-      <TruncatedComponent height={150} bgColor={theme.token.colorBgContainer}>
+      <TruncatedComponent
+        height={truncateHeight}
+        bgColor={theme.token.colorBgContainer}
+      >
         <pre
           style={{
             whiteSpace: 'pre-wrap',

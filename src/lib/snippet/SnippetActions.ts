@@ -46,6 +46,23 @@ async function setSnippetBodyFromClipboard() {
     .snippetUpdater.set({ body: await navigator.clipboard.readText() });
 }
 
+async function setSnippetBodyPreviewFromClipboard() {
+  let text = '';
+  try {
+    text = await navigator.clipboard.readText();
+    if (!text) throw new Error('Text in clipboard empty');
+  } catch (err) {
+    errorAndToast(
+      'No text in clipboard.  Copy text to start creating snippet.'
+    );
+  }
+  store.getActions().snippetUpdater.set({ bodyPreview: text });
+}
+
+function clearSnippetBodyPreview() {
+  store.getActions().snippetUpdater.set({ bodyPreview: '' });
+}
+
 function setNewSnippetTitleToDefault() {
   store.getActions().snippetUpdater.set({ title: 'Snippet Title...' });
 }
@@ -57,11 +74,14 @@ function clearSnippetUpdaterData() {
 function initializeNew() {
   setNewSnippetTitleToDefault();
   setSnippetBodyFromClipboard();
+  clearSnippetBodyPreview();
 }
 
 export default {
   submit,
   setSnippetBodyFromClipboard,
+  setSnippetBodyPreviewFromClipboard,
+  clearSnippetBodyPreview,
   setNewSnippetTitleToDefault,
   initializeNew,
   clearSnippetUpdaterData,

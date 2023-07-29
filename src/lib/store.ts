@@ -32,6 +32,7 @@ class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
     if (!state.body) return false;
     return true;
   });
+  bodyPreview = '';
 }
 
 class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {

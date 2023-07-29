@@ -4,9 +4,11 @@ import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import SnippetList from './SnippetList';
 import SnippetActions from '../../lib/snippet/SnippetActions';
+import { useS } from '../../lib/store';
 
 export default function Homescreen() {
   useIPC();
+  const snippetUpdater = useS((s) => s.snippetUpdater);
 
   useEffect(() => {
     function setInitialStoreState() {
@@ -14,6 +16,11 @@ export default function Homescreen() {
     }
     setInitialStoreState();
   }, []);
+
+  function newSnippetButtonDisabled() {
+    if (snippetUpdater.body) return true;
+    return false;
+  }
 
   return (
     <div
@@ -30,8 +37,12 @@ export default function Homescreen() {
         type="dashed"
         icon={<PlusOutlined />}
         onClick={SnippetActions.initializeNew}
+        onMouseEnter={SnippetActions.setSnippetBodyPreviewFromClipboard}
+        onMouseLeave={SnippetActions.clearSnippetBodyPreview}
+        disabled={newSnippetButtonDisabled()}
       >
-        New Snippet
+        {!newSnippetButtonDisabled() && 'New Snippet'}
+        {newSnippetButtonDisabled() && 'Creation In Progress'}
       </Button>
       <SnippetList />
     </div>
