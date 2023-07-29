@@ -3,6 +3,7 @@ import { StoreProvider } from 'easy-peasy';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import store from '../lib/store';
 import './App.css';
+import './BorderAnimation.css';
 import Homescreen from './HomeScreen/Homescreen';
 import { useColorScheme, useTheme } from './hooks';
 import ToastErrors from './Toast';

@@ -1,0 +1,89 @@
+/* note that some variables are used from other files ie --light-gray */
+
+:root {
+  --box-anim-timing: 4s;
+  /* anim delay must be half of anim timing */
+  --box-anim-delay: 2s;
+
+  --box-anim-thickness: 3px;
+}
+* {
+  /* margin: 0;
+  padding: 0; */
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+}
+.box-outer {
+  overflow: hidden;
+}
+.main-box {
+  position: relative;
+  border: var(--box-anim-thickness) solid var(--light-gray);
+}
+.bar {
+  position: absolute;
+  width: 40px;
+  height: var(--box-anim-thickness);
+  background: #fff;
+  transition: all var(--box-anim-timing) linear;
+  -webkit-animation-duration: var(--box-anim-timing);
+  animation-duration: var(--box-anim-timing);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+.bar.delay {
+  animation-delay: var(--box-anim-delay);
+  -webkit-animation-delay: var(--box-anim-delay);
+}
+.top {
+  top: calc(-1 * var(--box-anim-thickness));
+  left: calc(-1 * var(--box-anim-thickness));
+}
+.right {
+  top: 0;
+  right: calc(-1 * var(--box-anim-thickness));
+  transform: rotate(90deg);
+  transform-origin: top right;
+}
+.bottom {
+  bottom: calc(-1 * var(--box-anim-thickness));
+  left: calc(-1 * var(--box-anim-thickness));
+}
+.left {
+  top: 0;
+  left: calc(-1 * var(--box-anim-thickness));
+  transform: rotate(90deg);
+  transform-origin: bottom left;
+}
+
+@keyframes h-move {
+  0% {
+    left: calc(0% - 40px);
+  }
+  100% {
+    left: calc(100% + 40px);
+  }
+}
+.top,
+.bottom {
+  -webkit-animation-name: h-move;
+  animation-name: h-move;
+}
+
+@keyframes v-move {
+  0% {
+    top: calc(0% - 40px);
+  }
+  100% {
+    top: calc(100% + 40px);
+  }
+}
+.right,
+.left {
+  -webkit-animation-name: v-move;
+  animation-name: v-move;
+}

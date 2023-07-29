@@ -85,60 +85,67 @@ export default function () {
       <div>
         <div>
           {snippetUpdater.body && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                backgroundColor: 'var(--lighter-gray)',
-                padding: '15px 25px',
-                borderRadius: '17px',
-                marginBottom: '20px',
-              }}
-            >
+            <div className="box-outer">
               <div
                 style={{
-                  paddingBottom: '20px',
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'start',
+                  flexDirection: 'column',
+                  backgroundColor: 'var(--lighter-gray)',
+                  padding: '15px 25px',
+                  borderRadius: '17px',
+                  marginBottom: '20px',
                 }}
+                className="main-box"
               >
-                <Space direction="vertical" style={{ width: '300px' }}>
-                  <Input
-                    ref={newSnippetTitleInputRef}
-                    type="text"
-                    placeholder="Snippet Title"
-                    bordered={false}
-                    size="large"
-                    style={{ fontWeight: 600, paddingLeft: 0 }}
-                    value={snippetUpdater.title}
-                    onChange={({ target }) =>
-                      store
-                        .getActions()
-                        .snippetUpdater.set({ title: target.value })
-                    }
-                  />
-                  <TagSelector />
-                </Space>
-                <Space>
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={SnippetActions.clearSnippetUpdaterData}
-                  />
-                  <Button
-                    disabled={!snippetUpdater.isValid}
-                    type="primary"
-                    icon={<CheckCircleOutlined />}
-                    onClick={SnippetActions.submit}
-                  >
-                    Save
-                  </Button>
-                </Space>
-              </div>
-              <HorizontalLine />
-              <div>
-                <SnippetBody body={snippetUpdater.body} theme={theme} />
+                <div className="bar top" />
+                <div className="bar right delay" />
+                <div className="bar bottom delay" />
+                <div className="bar left" />
+                <div
+                  style={{
+                    paddingBottom: '20px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                  }}
+                >
+                  <Space direction="vertical" style={{ width: '300px' }}>
+                    <Input
+                      ref={newSnippetTitleInputRef}
+                      type="text"
+                      placeholder="Snippet Title"
+                      bordered={false}
+                      size="large"
+                      style={{ fontWeight: 600, paddingLeft: 0 }}
+                      value={snippetUpdater.title}
+                      onChange={({ target }) =>
+                        store
+                          .getActions()
+                          .snippetUpdater.set({ title: target.value })
+                      }
+                    />
+                    <TagSelector />
+                  </Space>
+                  <Space>
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={SnippetActions.clearSnippetUpdaterData}
+                    />
+                    <Button
+                      disabled={!snippetUpdater.isValid}
+                      type="primary"
+                      icon={<CheckCircleOutlined />}
+                      onClick={SnippetActions.submit}
+                    >
+                      Save
+                    </Button>
+                  </Space>
+                </div>
+                <HorizontalLine />
+                <div>
+                  <SnippetBody body={snippetUpdater.body} theme={theme} />
+                </div>
               </div>
             </div>
           )}
