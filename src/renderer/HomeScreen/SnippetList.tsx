@@ -13,6 +13,7 @@ import SnippetActions from '../../lib/snippet/SnippetActions';
 import { useEffect, useRef } from 'react';
 import store, { useA, useS } from '../../lib/store';
 import TagSelector from './TagSelector';
+import DeleteButton from '../components/DeleteButton';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -200,16 +201,11 @@ export default function () {
                   <SnippetBody body={body} theme={theme} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                  <Button
-                    icon={<DeleteOutlined />}
-                    type="text"
-                    size="small"
-                    onClick={() => {
+                  <DeleteButton
+                    action={() => {
                       window.electron.ipcRenderer.deleteSnippet(title);
                     }}
-                  >
-                    Delete
-                  </Button>
+                  />
                 </div>
               </div>
             );

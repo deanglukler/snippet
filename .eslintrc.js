@@ -32,6 +32,8 @@ module.exports = {
     radix: 'off',
     'no-useless-constructor': 'off',
     'no-plusplus': 'off',
+    'react/function-component-definition': 'off',
+    'react/prop-types': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
