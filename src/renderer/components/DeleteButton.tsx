@@ -33,7 +33,7 @@ const DeleteButton: React.FC<{ action: () => void }> = ({ action }) => {
           <Button type="text" key="cancel" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="delete" type="primary" danger onClick={handleOk}>
+          <Button key="delete" type="text" danger onClick={handleOk}>
             Delete
           </Button>,
         ]}

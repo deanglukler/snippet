@@ -1,7 +1,7 @@
 .snippet-body:hover .expand-button {
-  display: unset;
+  opacity: 1;
 }
 
 .expand-button {
-  display: none;
+  opacity: 0;
 }

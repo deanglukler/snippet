@@ -11,16 +11,16 @@ const darkThemeColors: Partial<AliasToken> = {
 };
 
 const tokenBase = {
-  colorPrimary: '#ff8c00',
-  borderRadius: 15,
+  colorPrimary: '#52a258',
+  borderRadius: 17,
   fontSizeHeading1: 24,
   fontSizeHeading2: 20,
   fontSizeHeading3: 18,
   fontSizeHeading4: 18,
   fontSize: 15,
-  colorSuccess: '#52c41a',
+  colorSuccess: '#59ab62',
   colorWarning: '#ffc107',
-  colorError: '#f5222d',
+  colorError: '#f60e0e',
   colorInfo: '#1890ff',
 };
 
