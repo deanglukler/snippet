@@ -5,8 +5,8 @@ import { PlusOutlined } from '@ant-design/icons';
 import SnippetList from './SnippetList';
 import SnippetActions from '../../lib/snippet/SnippetActions';
 import { useA, useS } from '../../lib/store';
-import NotWide from '../components/NotWide';
 import _ from 'lodash';
+import SnippetCreator from './SnippetCreator';
 
 const debouncedSearch = _.debounce((text: string) =>
   window.electron.ipcRenderer.sendSearch(text)
@@ -48,14 +48,15 @@ export default function Homescreen() {
         position: 'relative',
         height: '100vh',
         display: 'grid',
-        gridTemplateRows: '[header] min-content [content] auto',
+        gridTemplateRows:
+          '[header] min-content [new-snippet] min-content [content] min-content',
         padding: '0 10px',
       }}
     >
       <div>
         <div
           style={{
-            gridRow: 'header / content',
+            gridRow: 'header / new-snippet',
             display: 'flex',
             justifyContent: 'space-between',
             paddingTop: 25,
@@ -82,6 +83,9 @@ export default function Homescreen() {
           </Button>
         </div>
         <Divider />
+      </div>
+      <div style={{ gridRow: 'new-snippet' }}>
+        <SnippetCreator />
       </div>
       <div
         style={{

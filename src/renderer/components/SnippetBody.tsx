@@ -6,11 +6,13 @@ const SnippetBody: React.FC<{
   body: string;
   theme: any;
   truncateHeight?: number;
-}> = ({ body, theme, truncateHeight = 170 }) => {
+  refToScrollOnCollapse?: React.RefObject<HTMLDivElement>;
+}> = ({ body, theme, truncateHeight = 170, refToScrollOnCollapse }) => {
   return (
     <TruncatedComponent
       height={truncateHeight}
       bgColor={theme.token.colorBgContainer}
+      refToScrollOnCollapse={refToScrollOnCollapse}
     >
       <pre
         style={{
@@ -29,12 +31,14 @@ interface TruncatedComponentProps {
   children: ReactNode;
   height: number;
   bgColor?: string;
+  refToScrollOnCollapse?: React.RefObject<HTMLElement>;
 }
 
 function TruncatedComponent({
   children,
   height,
   bgColor,
+  refToScrollOnCollapse,
 }: TruncatedComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -109,7 +113,11 @@ function TruncatedComponent({
               }}
               onClick={() => {
                 setExpanded(false);
-                containerRef.current?.scrollIntoView();
+                if (refToScrollOnCollapse) {
+                  refToScrollOnCollapse.current?.scrollIntoView();
+                } else {
+                  containerRef.current?.scrollIntoView();
+                }
               }}
             >
               Collapse

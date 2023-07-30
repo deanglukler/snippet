@@ -19,7 +19,6 @@ const DeleteButton: React.FC<{ action: () => void }> = ({ action }) => {
       <Button
         icon={<DeleteOutlined />}
         type="text"
-        size="small"
         onClick={() => setVisible(true)}
       >
         Delete

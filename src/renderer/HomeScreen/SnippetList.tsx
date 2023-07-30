@@ -1,25 +1,13 @@
-import { Button, Input, InputRef, Space, Typography } from 'antd';
-import _ from 'lodash';
-import { errorAndToast, successToast } from '../../lib/toast';
-import { useTheme } from '../hooks';
-import {
-  DeleteOutlined,
-  CheckCircleOutlined,
-  CopyOutlined,
-} from '@ant-design/icons';
+import { InputRef, Typography } from 'antd';
 import SnippetActions from '../../lib/snippet/SnippetActions';
 import { useEffect, useRef } from 'react';
-import store, { useS } from '../../lib/store';
-import TagSelector from './TagSelector';
-import DeleteButton from '../components/DeleteButton';
+import { useS } from '../../lib/store';
 import './SnippetList.css';
-import AnimatedBorderBox from '../components/AnimatedBorderBox';
-import SnippetBody from '../components/SnippetBody';
+import SnippetListItem from './SnippetListItem';
 
 export default function () {
-  const { results } = useS((s) => s.snippetSearch);
   const snippetUpdater = useS((s) => s.snippetUpdater);
-  const theme = useTheme();
+  const { results } = useS((s) => s.snippetSearch);
   const newSnippetTitleInputRef = useRef<InputRef>(null);
   const prevNewSnippetTitleInputRef = useRef<any>(null);
 
@@ -35,21 +23,9 @@ export default function () {
     prevNewSnippetTitleInputRef.current = newSnippetTitleInputRef.current;
   });
 
-  function copySnippet(body: string) {
-    window.electron.ipcRenderer
-      .copySnippet(body)
-      .then(() => {
-        successToast('Copied!');
-        return null;
-      })
-      .catch((err) => {
-        errorAndToast('That didnt work.', err);
-      });
-  }
-
   return (
     <div>
-      {results.length === 0 && (
+      {!snippetUpdater.body && results.length === 0 && (
         <Typography.Paragraph>
           No Snippets Yet.{' '}
           <Typography.Link onClick={SnippetActions.initializeNew}>
@@ -57,138 +33,10 @@ export default function () {
           </Typography.Link>
         </Typography.Paragraph>
       )}
-      {snippetUpdater.bodyPreview && (
-        <div style={{ position: 'sticky' }}>
-          <AnimatedBorderBox>
-            <div className="list-card">
-              <Typography.Title level={3}>Clipboard Preview:</Typography.Title>
-              <SnippetBody
-                body={snippetUpdater.bodyPreview}
-                theme={theme}
-                truncateHeight={500}
-              />
-            </div>
-          </AnimatedBorderBox>
-        </div>
-      )}
-      {snippetUpdater.body && (
-        <AnimatedBorderBox>
-          <div
-            style={{
-              paddingBottom: '20px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'start',
-            }}
-          >
-            <Space direction="vertical" style={{ width: '300px' }}>
-              <Input
-                ref={newSnippetTitleInputRef}
-                type="text"
-                placeholder="Snippet Title"
-                bordered={false}
-                size="large"
-                style={{ fontWeight: 600, paddingLeft: 0 }}
-                value={snippetUpdater.title}
-                onChange={({ target }) =>
-                  store.getActions().snippetUpdater.set({ title: target.value })
-                }
-              />
-              <TagSelector />
-            </Space>
-            <Space>
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={SnippetActions.clearSnippetUpdaterData}
-              />
-              <Button
-                disabled={!snippetUpdater.isValid}
-                type="primary"
-                icon={<CheckCircleOutlined />}
-                onClick={SnippetActions.submit}
-              >
-                Save
-              </Button>
-            </Space>
-          </div>
-          <HorizontalLine />
-          <div>
-            <SnippetBody
-              body={snippetUpdater.body}
-              theme={theme}
-              truncateHeight={500}
-            />
-          </div>
-        </AnimatedBorderBox>
-      )}
-      {results.map(({ title, body, metadata }) => {
-        return (
-          <div className="list-card" key={title}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                height: '55px',
-              }}
-            >
-              <Typography.Title level={4} style={{ margin: 0 }}>
-                {title}
-              </Typography.Title>
-              <div>
-                <Button
-                  type="text"
-                  icon={<CopyOutlined />}
-                  onClick={() => copySnippet(body)}
-                >
-                  Copy
-                </Button>
-              </div>
-            </div>
-            {metadata.tags.length > 0 && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '8px',
-                  paddingBottom: '10px',
-                }}
-              >
-                {metadata.tags.map((tag) => {
-                  return (
-                    <Typography.Text key={tag} style={{ color: 'var(--gray)' }}>
-                      # {tag}
-                    </Typography.Text>
-                  );
-                })}
-              </div>
-            )}
-            <HorizontalLine />
 
-            <div>
-              <SnippetBody body={body} theme={theme} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-              <DeleteButton
-                action={() => {
-                  window.electron.ipcRenderer.deleteSnippet(title);
-                }}
-              />
-            </div>
-          </div>
-        );
+      {results.map((snippet) => {
+        return <SnippetListItem snippet={snippet} />;
       })}
     </div>
-  );
-}
-
-function HorizontalLine() {
-  return (
-    <div
-      style={{
-        borderBottom: '1px solid var(--light-gray)',
-        height: '1px',
-      }}
-    />
   );
 }
