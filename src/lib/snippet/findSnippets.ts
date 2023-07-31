@@ -2,12 +2,15 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../CONST';
 import log from '../util/log';
-import { SnippetDataSerialized } from './types';
+import { SearchParams, SnippetDataSerialized } from './types';
 import FuzzySearch from 'fuzzy-search';
 import logAndThrow from '../util/logAndThrow';
 import safelyParseMetadata from './safelyParseSnippetMetadata';
+import _ from 'lodash';
 
-export default async function (searchText?: string) {
+export default async function (
+  search?: SearchParams
+): Promise<SnippetDataSerialized[]> {
   async function snippetContainers() {
     const dirResults = await fs.readdir(SNIPPETS);
     return dirResults.filter((file) => !file.startsWith('.'));
@@ -50,16 +53,33 @@ export default async function (searchText?: string) {
     };
   }
 
+  if (!search) {
+    return _.values(snippets);
+  }
+
+  if (search.tags && search.tags.length > 0) {
+    for (const snippetTitle in snippets) {
+      const snippet = snippets[snippetTitle];
+      const metadata = safelyParseMetadata(snippet.metadata);
+      if (!metadata.tags.some((tag) => search.tags?.includes(tag))) {
+        delete snippets[snippetTitle];
+      }
+    }
+  }
+
+  if (!search.text) {
+    return _.values(snippets);
+  }
+
   const searchableKeyNames = Object.keys(snippets);
   const searcher = new FuzzySearch(searchableKeyNames);
-  const results = searchText ? searcher.search(searchText) : searchableKeyNames;
+  const results = searcher.search(search.text);
 
-  const returnableResults: SnippetDataSerialized[] = results.map((k) => {
+  return results.map((k) => {
     const snippetData = snippets[k];
     if (!snippetData) {
       logAndThrow('Assert: Snippet Data should exist.');
     }
     return snippets[k];
   });
-  return returnableResults;
 }

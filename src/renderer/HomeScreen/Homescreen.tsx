@@ -7,32 +7,48 @@ import SnippetActions from '../../lib/snippet/SnippetActions';
 import { useA, useS } from '../../lib/store';
 import _ from 'lodash';
 import SnippetCreator from './SnippetCreator';
+import SearchTagList from './SearchTagList';
+import { SearchParams } from '../../lib/snippet/types';
 
-const debouncedSearch = _.debounce((text: string) =>
-  window.electron.ipcRenderer.sendSearch(text)
+const debouncedSearch = _.debounce((searchParams?: SearchParams) =>
+  window.electron.ipcRenderer.sendSearch(searchParams)
 );
 export default function Homescreen() {
   useIPC();
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
-  const { searchText } = useS((s) => s.snippetSearch);
+  const snippetSearch = useS((s) => s.snippetSearch);
   const snippetUpdater = useS((s) => s.snippetUpdater);
 
   useEffect(() => {
     function setInitialStoreState() {
-      window.electron.ipcRenderer.sendSearch('');
+      window.electron.ipcRenderer.sendSearch();
     }
     setInitialStoreState();
   }, []);
 
   useEffect(() => {
     const searchTimer = setInterval(() => {
-      debouncedSearch(searchText);
+      debouncedSearch({
+        text: snippetSearch.searchText,
+        tags: snippetSearch.searchTags,
+      });
     }, 500);
 
     return () => {
       clearInterval(searchTimer);
     };
   });
+
+  useEffect(() => {
+    SnippetActions.refreshTagOptions();
+    const tagOptionsSync = setInterval(() => {
+      SnippetActions.refreshTagOptions();
+    }, 2000);
+
+    return () => {
+      clearInterval(tagOptionsSync);
+    };
+  }, []);
 
   function newSnippetButtonDisabled() {
     if (snippetUpdater.body) return true;
@@ -49,7 +65,7 @@ export default function Homescreen() {
         height: '100vh',
         display: 'grid',
         gridTemplateRows:
-          '[header] min-content [new-snippet] min-content [content] min-content',
+          '[header] min-content [search] min-content [new-snippet] min-content [snippet-list] auto',
         padding: '0 10px',
       }}
     >
@@ -66,7 +82,7 @@ export default function Homescreen() {
             onChange={(e) => {
               setSnippetSearch({ searchText: e.target.value });
             }}
-            value={searchText}
+            value={snippetSearch.searchText}
             placeholder="Search snippets"
             style={{ width: '100%', maxWidth: 300 }}
           />
@@ -82,6 +98,9 @@ export default function Homescreen() {
             {newSnippetButtonDisabled() && 'Creation In Progress'}
           </Button>
         </div>
+      </div>
+      <div style={{ gridRow: 'search' }}>
+        <SearchTagList />
         <Divider />
       </div>
       <div style={{ gridRow: 'new-snippet' }}>
@@ -89,7 +108,7 @@ export default function Homescreen() {
       </div>
       <div
         style={{
-          gridRow: 'content / content',
+          gridRow: 'snippet-list',
           overflowY: 'scroll',
           paddingRight: 5,
           marginRight: -5,

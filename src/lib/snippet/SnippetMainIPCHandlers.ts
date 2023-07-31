@@ -7,12 +7,17 @@ import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
 import log from '../util/log';
 import logAndThrow from '../util/logAndThrow';
-import { SnippetData, SnippetDataSerialized, TagList } from './types';
+import {
+  SearchParams,
+  SnippetData,
+  SnippetDataSerialized,
+  TagList,
+} from './types';
 import { IPCMainHandlerFunction } from '../../types';
 
 import dataToRenderer from '../toRenderer/dataToRenderer';
-import findSnippetsByTitle from './findSnippetsByTitle';
-import dbPromise, { COLLECTION } from '../../main/database';
+import findSnippets from './findSnippets';
+import mainGetTags from './mainGetTags';
 
 function getSnipDirPath(title: string) {
   return path.join(SNIPPETS, title);
@@ -86,10 +91,14 @@ const deleteSnippet: IPCMainHandlerFunction<string> = async (_event, title) => {
   await rm(snippetDirPath, { recursive: true });
 };
 
-const search: IPCMainHandlerFunction<string> = async (_event, text) => {
+const search: IPCMainHandlerFunction<SearchParams | undefined> = async (
+  _event,
+  searchParams
+) => {
   try {
-    const returnableResults: SnippetDataSerialized[] =
-      await findSnippetsByTitle(text);
+    const returnableResults: SnippetDataSerialized[] = await findSnippets(
+      searchParams
+    );
 
     dataToRenderer('SEARCH:RESULTS', returnableResults);
   } catch (error) {
@@ -99,19 +108,8 @@ const search: IPCMainHandlerFunction<string> = async (_event, text) => {
 };
 
 const getTags: IPCMainHandlerFunction<null, TagList> = async (_event) => {
-  async function getAllTags(): Promise<string[]> {
-    const db = await dbPromise;
-    const tagsCollection = db.getCollection(COLLECTION.TAGS);
-
-    const tags = tagsCollection.find();
-
-    const tagNames = tags.map((tag) => tag.name);
-
-    return tagNames;
-  }
-
   try {
-    const tags = await getAllTags();
+    const tags = await mainGetTags();
     return tags;
   } catch (error) {
     sendErrorToRenderer(error);

@@ -1,25 +1,22 @@
 import { Select, SelectProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useA } from '../../lib/store';
+import { useA, useS } from '../../lib/store';
 
 export default function TagSelector() {
   const [tagOptions, setTagOptions] = useState<SelectProps['options']>([]);
   const { set } = useA((a) => a.snippetUpdater);
+  const snippetSearch = useS((s) => s.snippetSearch);
 
   const handleChange = (values: string[]) => {
     set({ tags: values });
   };
 
   useEffect(() => {
-    // eslint-disable-next-line promise/catch-or-return
-    window.electron.ipcRenderer.getTags().then((tags) => {
-      const tagOpts = tags.map((name) => {
-        return { value: name, label: name };
-      });
-      setTagOptions(tagOpts);
-      return null;
+    const tagOpts = snippetSearch.tagOptions.map((name) => {
+      return { value: name, label: name };
     });
-  }, []);
+    setTagOptions(tagOpts);
+  }, [snippetSearch.tagOptions]);
 
   return (
     <Select

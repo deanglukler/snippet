@@ -16,3 +16,8 @@ export interface SnippetDataSerialized {
 }
 
 export type TagList = string[];
+
+export type SearchParams = {
+  text?: string;
+  tags?: string[];
+};

@@ -34,6 +34,8 @@ module.exports = {
     'no-plusplus': 'off',
     'react/function-component-definition': 'off',
     'react/prop-types': 'off',
+    'prefer-object-spread': 'off',
+    'guard-for-in': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

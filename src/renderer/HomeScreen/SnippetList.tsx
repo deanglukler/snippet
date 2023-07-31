@@ -1,6 +1,6 @@
 import { InputRef, Typography } from 'antd';
 import SnippetActions from '../../lib/snippet/SnippetActions';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useS } from '../../lib/store';
 import './SnippetList.css';
 import SnippetListItem from './SnippetListItem';
@@ -35,7 +35,11 @@ export default function () {
       )}
 
       {results.map((snippet) => {
-        return <SnippetListItem snippet={snippet} />;
+        return (
+          <React.Fragment key={snippet.title}>
+            <SnippetListItem snippet={snippet} />
+          </React.Fragment>
+        );
       })}
     </div>
   );

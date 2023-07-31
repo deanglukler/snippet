@@ -51,6 +51,7 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
         <div
           style={{
             display: 'flex',
+            flexWrap: 'wrap',
             gap: '8px',
             paddingBottom: '10px',
           }}
@@ -64,7 +65,7 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
           })}
         </div>
       )}
-      <Divider />
+      <Divider style={{ margin: '10px 0' }} />
       <div>
         <SnippetBody body={body} theme={theme} refToScrollOnCollapse={ref} />
       </div>

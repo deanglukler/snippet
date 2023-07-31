@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { SNIPPET_SCHEMA } from '../../schema/SNIPPET_SCHEMA';
 import store from '../store';
 import { errorAndToast } from '../toast';
@@ -77,6 +78,21 @@ function initializeNew() {
   clearSnippetBodyPreview();
 }
 
+function refreshTagOptions() {
+  return window.electron.ipcRenderer.getTags().then((tags) => {
+    const currentTagOptions = store.getState().snippetSearch.tagOptions;
+    if (!_.isEqual(tags, currentTagOptions)) {
+      store.getActions().snippetSearch.set({ tagOptions: tags });
+    }
+    return null;
+  });
+}
+
+function searchTagClick(tag: string) {
+  const st = store.getState().snippetSearch.searchTags;
+  store.getActions().snippetSearch.set({ searchTags: [..._.xor(st, [tag])] });
+}
+
 export default {
   submit,
   setSnippetBodyFromClipboard,
@@ -85,4 +101,6 @@ export default {
   setNewSnippetTitleToDefault,
   initializeNew,
   clearSnippetUpdaterData,
+  refreshTagOptions,
+  searchTagClick,
 };

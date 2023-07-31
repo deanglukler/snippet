@@ -37,6 +37,8 @@ class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
 
 class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
   searchText = '';
+  searchTags: string[] = [];
+  tagOptions: string[] = [];
   results: SnippetData[] = [];
 }
 
