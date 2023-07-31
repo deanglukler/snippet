@@ -13,7 +13,7 @@ import { app, ipcMain } from 'electron';
 import mainGetTags from '../lib/snippet/mainGetTags';
 
 import appReady from './appReady';
-import initIpc from './appInit/initIpc';
+import initIpc from './initIpc';
 import { isDebug } from './util';
 
 ipcMain.on('ipc-example', async (event, arg) => {

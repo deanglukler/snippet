@@ -1,6 +1,6 @@
-import SnippetHandlers from '../../lib/snippet/SnippetMainIPCHandlers';
+import SnippetHandlers from '../lib/snippet/SnippetMainIPCHandlers';
 import { ipcMain } from 'electron';
-import { INVOKERS_CHANNELS, IPCMainEventHandlerFn } from '../../types';
+import { INVOKERS_CHANNELS, IPCMainEventHandlerFn } from '../types';
 
 function mainIPCChannelHandler<
   Channel extends string = INVOKERS_CHANNELS,
