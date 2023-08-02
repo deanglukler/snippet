@@ -7,6 +7,8 @@ export type INVOKERS_CHANNELS =
   | 'snippet:copy'
   | 'snippet:delete';
 
+export type ROUTES = '/' | '/preferences';
+
 export type IPCMainHandlerFunction<
   DataIn = any,
   Return = void,

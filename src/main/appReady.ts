@@ -4,6 +4,7 @@ import fs from 'fs';
 import { getResourcePath } from './util';
 import createWindow from './createWindow';
 import log from '../lib/util/log';
+import routeToRenderer from '../lib/toRenderer/routeToRenderer';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let window: null | BrowserWindow;
@@ -27,10 +28,11 @@ export default function appReady() {
 
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Open',
+      label: 'Open Snippets',
       click: async () => {
         if (window) {
           window.show();
+          routeToRenderer('/');
         } else {
           window = await createWindow();
           window.on('closed', () => {
@@ -38,6 +40,29 @@ export default function appReady() {
               app.dock.hide();
             }
             window = null;
+          });
+          window.on('ready-to-show', () => {
+            routeToRenderer('/');
+          });
+        }
+      },
+    },
+    {
+      label: 'Preferences',
+      click: async () => {
+        if (window) {
+          window.show();
+          routeToRenderer('/preferences');
+        } else {
+          window = await createWindow();
+          window.on('closed', () => {
+            if (process.platform === 'darwin') {
+              app.dock.hide();
+            }
+            window = null;
+          });
+          window.on('ready-to-show', () => {
+            routeToRenderer('/preferences');
           });
         }
       },

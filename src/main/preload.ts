@@ -8,6 +8,7 @@ export type Channels =
   | 'ipc-example'
   | 'IPC:ERROR_IN_MAIN'
   | 'IPC:SUCCESS_IN_MAIN'
+  | 'IPC:ROUTE'
   | 'SEARCH:RESULTS'
   | 'TAGS:RESULTS';
 

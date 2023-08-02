@@ -7,6 +7,7 @@ import './BorderAnimation.css';
 import Homescreen from './HomeScreen/Homescreen';
 import { useColorScheme, useTheme } from './hooks';
 import ToastErrors from './Toast';
+import Preferences from './PreferencesScreen/Preferences';
 
 const { defaultAlgorithm, darkAlgorithm } = theme;
 
@@ -25,6 +26,7 @@ export default function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Homescreen />} />
+            <Route path="/preferences" element={<Preferences />} />
           </Routes>
         </Router>
         <ToastErrors />

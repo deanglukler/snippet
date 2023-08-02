@@ -3,6 +3,7 @@ import { useA, useS } from '../../lib/store';
 import { SnippetData, SnippetDataSerialized } from '../../lib/snippet/types';
 import _ from 'lodash';
 import safelyParseMetadata from '../../lib/snippet/safelyParseSnippetMetadata';
+import { useNavigate } from 'react-router-dom';
 
 export function useIPC() {
   const snippetSearchActions = useA((a) => a.snippetSearch);
@@ -33,4 +34,14 @@ export function useIPC() {
 
     return off;
   }, [snippetSearchActions, snippetSearchResults]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const off = window.electron.ipcRenderer.on('IPC:ROUTE', (msg) => {
+      navigate(msg);
+    });
+
+    return off;
+  }, [navigate]);
 }
