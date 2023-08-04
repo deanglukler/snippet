@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
-import { useS } from '../../lib/store';
-import SnippetActions from '../../lib/snippet/SnippetActions';
+import { useS } from '../store';
+import SnippetActions from '../snippet/SnippetActions';
 
 const SearchTagList: React.FC = () => {
   const snippetSearch = useS((s) => s.snippetSearch);

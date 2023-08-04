@@ -3,8 +3,8 @@ import path from 'path';
 import fs from 'fs';
 import { getResourcePath } from './util';
 import createWindow from './createWindow';
-import log from '../lib/util/log';
-import routeToRenderer from '../lib/toRenderer/routeToRenderer';
+import log from '../renderer/util/log';
+import routeToRenderer from './toRenderer/routeToRenderer';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let window: null | BrowserWindow;

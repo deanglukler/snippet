@@ -7,7 +7,7 @@ import {
   State,
 } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
-import { SnippetData } from './snippet/types';
+import { SnippetData } from '../types';
 
 class ActionsBase<T extends object = never> {
   set = action<T, Partial<T>>((state, setter) => {

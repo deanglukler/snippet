@@ -1,13 +1,13 @@
 import { ConfigProvider, theme } from 'antd';
 import { StoreProvider } from 'easy-peasy';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import store from '../lib/store';
+import store from './store';
 import './App.css';
 import './BorderAnimation.css';
 import Homescreen from './HomeScreen/Homescreen';
 import { useColorScheme, useTheme } from './hooks';
-import ToastErrors from './Toast';
 import Preferences from './PreferencesScreen/Preferences';
+import ToastComponent from './ToastComponent';
 
 const { defaultAlgorithm, darkAlgorithm } = theme;
 
@@ -29,7 +29,7 @@ export default function App() {
             <Route path="/preferences" element={<Preferences />} />
           </Routes>
         </Router>
-        <ToastErrors />
+        <ToastComponent />
       </ConfigProvider>
     </StoreProvider>
   );

@@ -1,37 +1,59 @@
-import { app } from 'electron';
 import fs from 'fs';
 import Loki from 'lokijs';
-import path from 'path';
-import log from '../lib/util/log';
-import { SNIPPET_APPLICATION_SUPPORT } from '../lib/CONST';
+import log from '../renderer/util/log';
+import { DATABASE_PATH, SNIPPET_APPLICATION_SUPPORT } from '../CONST';
+import { PreferenceBoolean, PreferenceString } from '../types';
 
-const DB_PATH = path.join(
-  app.getPath('userData'),
-  'Snippet',
-  'database.lokidb'
-);
+log('DB_PATH: ', DATABASE_PATH);
+const COLLECTION = { PREF_BOOL: 'prefBool', PREF_STRING: 'prefString' };
 
-log('DB_PATH: ', DB_PATH);
-const COLLECTION = { TAGS: 'tags' };
+const dbPromise = new Promise<Loki>((resolve) => {
+  if (fs.existsSync(DATABASE_PATH)) {
+    const db = new Loki(DATABASE_PATH, {
+      autosave: true,
+      autosaveInterval: 10,
+    });
+    db.loadDatabase({}, () => {
+      resolve(db);
+    });
+    log('Loaded Existing Database at.. ' + DATABASE_PATH);
+  } else {
+    log('Creating new database...');
+    if (!fs.existsSync(SNIPPET_APPLICATION_SUPPORT)) {
+      log(
+        'Creating application support directory.. ' +
+          SNIPPET_APPLICATION_SUPPORT
+      );
+      fs.mkdirSync(SNIPPET_APPLICATION_SUPPORT);
+      log(`Created Dir: ${SNIPPET_APPLICATION_SUPPORT}`);
+    }
+    const db = new Loki(DATABASE_PATH, {
+      autosave: true,
+      autosaveInterval: 10,
+    });
+    db.addCollection(COLLECTION.PREF_STRING);
+    db.addCollection(COLLECTION.PREF_BOOL);
 
-let db: Loki;
-if (fs.existsSync(DB_PATH)) {
-  db = new Loki(DB_PATH);
-  db.loadDatabase({}, () => {
-    // ... add collections and data to the database
-  });
-} else {
-  if (!fs.existsSync(SNIPPET_APPLICATION_SUPPORT)) {
-    fs.mkdirSync(SNIPPET_APPLICATION_SUPPORT);
-    log('Created Application Support/Snippet');
+    const prefBool = db.getCollection(COLLECTION.PREF_BOOL);
+    const prefString = db.getCollection(COLLECTION.PREF_STRING);
+
+    const prefBoolInserts: PreferenceBoolean[] = [
+      { preference: 'iconInTray', value: true, category: 'user' },
+      { preference: 'doYouLikeMe', value: true, category: 'user' },
+    ];
+    const prefStringInserts: PreferenceString[] = [
+      { preference: 'snippetsDirectory', value: 'DEFAULT', category: 'user' },
+      { preference: 'doYouLikeMe', value: 'yes', category: 'user' },
+    ];
+    prefBool.insert(prefBoolInserts);
+    prefString.insert(prefStringInserts);
+
+    log('Initialized new database!');
+    db.loadDatabase({}, () => {
+      resolve(db);
+    });
   }
-  db = new Loki(DB_PATH, { autosave: true, autosaveInterval: 10 });
-  db.addCollection(COLLECTION.TAGS);
-
-  log('Initialized new database!');
-}
-
-const dbPromise = Promise.resolve(db);
+});
 
 export default dbPromise;
 export { COLLECTION };

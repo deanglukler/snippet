@@ -1,8 +1,7 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { SearchParams, SnippetData } from '../lib/snippet/types';
-import { INVOKERS_CHANNELS } from '../types';
+import { INVOKERS_CHANNELS, SearchParams, SnippetData } from '../types';
 
 export type Channels =
   | 'ipc-example'

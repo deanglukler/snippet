@@ -1,6 +1,6 @@
 import { Select, SelectProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useA, useS } from '../../lib/store';
+import { useA, useS } from '../store';
 
 export default function TagSelector() {
   const [tagOptions, setTagOptions] = useState<SelectProps['options']>([]);

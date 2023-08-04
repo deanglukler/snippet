@@ -1,4 +1,4 @@
-import { SnippetMetaData } from './types';
+import { SnippetMetaData } from '../../types';
 import _ from 'lodash';
 import log from '../util/log';
 import findSnippets from './findSnippets';

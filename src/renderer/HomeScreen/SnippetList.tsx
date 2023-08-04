@@ -1,7 +1,7 @@
 import { InputRef, Typography } from 'antd';
-import SnippetActions from '../../lib/snippet/SnippetActions';
+import SnippetActions from '../snippet/SnippetActions';
 import React, { useEffect, useRef } from 'react';
-import { useS } from '../../lib/store';
+import { useS } from '../store';
 import './SnippetList.css';
 import SnippetListItem from './SnippetListItem';
 

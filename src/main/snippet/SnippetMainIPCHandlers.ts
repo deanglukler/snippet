@@ -2,22 +2,22 @@ import { clipboard } from 'electron';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { rm } from 'fs/promises';
 import path from 'path';
-import { METADATA_FILENAME, SNIPPETS } from '../CONST';
+import { METADATA_FILENAME, SNIPPETS } from '../../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
-import log from '../util/log';
-import logAndThrow from '../util/logAndThrow';
+import log from '../../renderer/util/log';
+import logAndThrow from '../../renderer/util/logAndThrow';
 import {
+  IPCMainHandlerFunction,
   SearchParams,
   SnippetData,
   SnippetDataSerialized,
   TagList,
-} from './types';
-import { IPCMainHandlerFunction } from '../../types';
+} from '../../types';
 
 import dataToRenderer from '../toRenderer/dataToRenderer';
-import findSnippets from './findSnippets';
-import mainGetTags from './mainGetTags';
+import findSnippets from '../../renderer/snippet/findSnippets';
+import mainGetTags from '../../renderer/snippet/mainGetTags';
 
 function getSnipDirPath(title: string) {
   return path.join(SNIPPETS, title);

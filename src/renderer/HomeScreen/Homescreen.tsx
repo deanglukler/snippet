@@ -3,12 +3,12 @@ import { useIPC } from '../hooks/useIPC';
 import { Button, Input, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import SnippetList from './SnippetList';
-import SnippetActions from '../../lib/snippet/SnippetActions';
-import { useA, useS } from '../../lib/store';
+import SnippetActions from '../snippet/SnippetActions';
+import { useA, useS } from '../store';
 import _ from 'lodash';
 import SnippetCreator from './SnippetCreator';
 import SearchTagList from './SearchTagList';
-import { SearchParams } from '../../lib/snippet/types';
+import { SearchParams } from '../../types';
 
 const debouncedSearch = _.debounce((searchParams?: SearchParams) =>
   window.electron.ipcRenderer.sendSearch(searchParams)

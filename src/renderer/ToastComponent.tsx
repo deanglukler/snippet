@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { errorAndToast, successToast } from '../lib/toast';
+import { errorAndToast, successToast } from './toast';
 
 export default function () {
   useEffect(() => {

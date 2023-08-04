@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { window } from '../../main/appReady';
+import { window } from '../appReady';
 
 export default function (msg: string) {
   if (_.isObject(window)) {

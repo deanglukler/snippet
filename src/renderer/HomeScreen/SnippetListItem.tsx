@@ -2,10 +2,10 @@ import { Button, Divider, Typography } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import DeleteButton from '../components/DeleteButton';
 import SnippetBody from '../components/SnippetBody';
-import { SnippetData } from '../../lib/snippet/types';
-import { errorAndToast, successToast } from '../../lib/toast';
+import { errorAndToast, successToast } from '../toast';
 import { useTheme } from '../hooks';
 import { useRef } from 'react';
+import { SnippetData } from '../../types';
 
 const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
   const { title, body, metadata } = snippet;

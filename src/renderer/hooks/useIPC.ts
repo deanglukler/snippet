@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useA, useS } from '../../lib/store';
-import { SnippetData, SnippetDataSerialized } from '../../lib/snippet/types';
+import { useA, useS } from '../store';
+import { SnippetData, SnippetDataSerialized } from '../../types';
 import _ from 'lodash';
-import safelyParseMetadata from '../../lib/snippet/safelyParseSnippetMetadata';
+import safelyParseMetadata from '../snippet/safelyParseSnippetMetadata';
 import { useNavigate } from 'react-router-dom';
 
 export function useIPC() {
