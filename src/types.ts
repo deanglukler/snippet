@@ -35,6 +35,17 @@ export type PreferenceBoolean = {
   category: PreferenceCategory;
 };
 
+export type Preferences = {
+  iconInTray: {
+    value: boolean;
+    category: PreferenceCategory;
+  };
+  snippetsDirectory: {
+    value: string;
+    category: PreferenceCategory;
+  };
+};
+
 export interface SnippetMetaData {
   tags: string[];
   timestampMili: number;

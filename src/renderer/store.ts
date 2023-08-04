@@ -7,7 +7,8 @@ import {
   State,
 } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
-import { SnippetData } from '../types';
+import { Preferences as PreferencesType, SnippetData } from '../types';
+import initPreferences from '../initPreferences';
 
 class ActionsBase<T extends object = never> {
   set = action<T, Partial<T>>((state, setter) => {
@@ -42,14 +43,22 @@ class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
   results: SnippetData[] = [];
 }
 
+class PreferencesModel extends ActionsBase<State<PreferencesModel>> {
+  iconInTray: PreferencesType['iconInTray'] = initPreferences.iconInTray;
+  snippetsDirectory: PreferencesType['snippetsDirectory'] =
+    initPreferences.snippetsDirectory;
+}
+
 interface StoreModel {
   snippetUpdater: SnippetUpdaterModel;
   snippetSearch: SnippetSearchModel;
+  preferences: PreferencesModel;
 }
 
 const storeModel: StoreModel = {
   snippetUpdater: { ...new SnippetUpdaterModel() },
   snippetSearch: { ...new SnippetSearchModel() },
+  preferences: { ...new PreferencesModel() },
 };
 
 const logger = createLogger({

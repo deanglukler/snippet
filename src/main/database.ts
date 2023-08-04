@@ -2,10 +2,11 @@ import fs from 'fs';
 import Loki from 'lokijs';
 import log from '../renderer/util/log';
 import { DATABASE_PATH, SNIPPET_APPLICATION_SUPPORT } from '../CONST';
-import { PreferenceBoolean, PreferenceString } from '../types';
+import { Preferences } from '../types';
+import initPreferences from '../initPreferences';
 
 log('DB_PATH: ', DATABASE_PATH);
-const COLLECTION = { PREF_BOOL: 'prefBool', PREF_STRING: 'prefString' };
+const COLLECTION = { PREFERENCES: 'preferences' };
 
 const dbPromise = new Promise<Loki>((resolve) => {
   if (fs.existsSync(DATABASE_PATH)) {
@@ -31,22 +32,15 @@ const dbPromise = new Promise<Loki>((resolve) => {
       autosave: true,
       autosaveInterval: 10,
     });
-    db.addCollection(COLLECTION.PREF_STRING);
-    db.addCollection(COLLECTION.PREF_BOOL);
+    db.addCollection(COLLECTION.PREFERENCES);
 
-    const prefBool = db.getCollection(COLLECTION.PREF_BOOL);
-    const prefString = db.getCollection(COLLECTION.PREF_STRING);
+    const prefs = db.getCollection(COLLECTION.PREFERENCES);
 
-    const prefBoolInserts: PreferenceBoolean[] = [
-      { preference: 'iconInTray', value: true, category: 'user' },
-      { preference: 'doYouLikeMe', value: true, category: 'user' },
-    ];
-    const prefStringInserts: PreferenceString[] = [
-      { preference: 'snippetsDirectory', value: 'DEFAULT', category: 'user' },
-      { preference: 'doYouLikeMe', value: 'yes', category: 'user' },
-    ];
-    prefBool.insert(prefBoolInserts);
-    prefString.insert(prefStringInserts);
+    const prefsEntry: Preferences = {
+      iconInTray: initPreferences.iconInTray,
+      snippetsDirectory: initPreferences.snippetsDirectory,
+    };
+    prefs.insert(prefsEntry);
 
     log('Initialized new database!');
     db.loadDatabase({}, () => {
