@@ -36,6 +36,7 @@ module.exports = {
     'react/prop-types': 'off',
     'prefer-object-spread': 'off',
     'guard-for-in': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

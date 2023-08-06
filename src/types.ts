@@ -6,7 +6,8 @@ export type INVOKERS_CHANNELS =
   | 'tags:get'
   | 'snippet:copy'
   | 'snippet:delete'
-  | 'preferences:get';
+  | 'preferences:get'
+  | 'preferences:update';
 
 export type ROUTES = '/' | '/preferences';
 
@@ -23,18 +24,6 @@ export type IPCMainEventHandlerFn = (
 
 type PreferenceCategory = 'user';
 
-export type PreferenceString = {
-  preference: string;
-  value: string;
-  category: PreferenceCategory;
-};
-
-export type PreferenceBoolean = {
-  preference: string;
-  value: boolean;
-  category: PreferenceCategory;
-};
-
 export type Preferences = {
   iconInTray: {
     value: boolean;
@@ -45,6 +34,8 @@ export type Preferences = {
     category: PreferenceCategory;
   };
 };
+
+export type PreferenceName = keyof Preferences;
 
 export interface SnippetMetaData {
   tags: string[];

@@ -1,7 +1,13 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { INVOKERS_CHANNELS, SearchParams, SnippetData } from '../types';
+import {
+  INVOKERS_CHANNELS,
+  PreferenceName,
+  Preferences,
+  SearchParams,
+  SnippetData,
+} from '../types';
 
 export type Channels =
   | 'ipc-example'
@@ -44,6 +50,17 @@ const electronHandler = {
       return ipcRenderer.invoke('tags:get' as INVOKERS_CHANNELS) as Promise<
         string[]
       >;
+    },
+    getPrefs() {
+      return ipcRenderer.invoke(
+        'preferences:get' as INVOKERS_CHANNELS
+      ) as Promise<Preferences>;
+    },
+    updatePrefs(update: { name: PreferenceName; value: any }) {
+      return ipcRenderer.invoke(
+        'preferences:update' as INVOKERS_CHANNELS,
+        update
+      ) as Promise<Preferences>;
     },
   },
 };

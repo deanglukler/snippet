@@ -17,4 +17,8 @@ export default function initIpc() {
   mainIPCChannelHandler('search:send', SnippetHandlers.search);
   mainIPCChannelHandler('tags:get', SnippetHandlers.getTags);
   mainIPCChannelHandler('preferences:get', PrefMainIPCHandlers.getPreferences);
+  mainIPCChannelHandler(
+    'preferences:update',
+    PrefMainIPCHandlers.updatePreference
+  );
 }

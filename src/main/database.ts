@@ -29,8 +29,8 @@ const dbPromise = new Promise<Loki>((resolve) => {
       log(`Created Dir: ${SNIPPET_APPLICATION_SUPPORT}`);
     }
     const db = new Loki(DATABASE_PATH, {
-      autosave: true,
-      autosaveInterval: 10,
+      autosave: true, // does it work?
+      autosaveInterval: 100, // does it work ? ie. I had to use savedatabase() below
     });
     db.addCollection(COLLECTION.PREFERENCES);
 
@@ -41,6 +41,8 @@ const dbPromise = new Promise<Loki>((resolve) => {
       snippetsDirectory: initPreferences.snippetsDirectory,
     };
     prefs.insert(prefsEntry);
+
+    db.saveDatabase();
 
     log('Initialized new database!');
     db.loadDatabase({}, () => {
