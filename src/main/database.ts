@@ -5,7 +5,6 @@ import { DATABASE_PATH, SNIPPET_APPLICATION_SUPPORT } from '../CONST';
 import { Preferences } from '../types';
 import initPreferences from '../initPreferences';
 
-log('DB_PATH: ', DATABASE_PATH);
 const COLLECTION = { PREFERENCES: 'preferences' };
 
 const dbPromise = new Promise<Loki>((resolve) => {

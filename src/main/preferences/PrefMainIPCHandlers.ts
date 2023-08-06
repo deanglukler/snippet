@@ -4,11 +4,7 @@ import {
   PreferenceName,
 } from '../../types';
 import database, { COLLECTION } from '../database';
-
-async function getPreferences() {
-  const db = await database;
-  return db.getCollection(COLLECTION.PREFERENCES).findOne();
-}
+import getPreferences from './getPreferences';
 
 const updatePreference: IPCMainHandlerFunction<
   {
