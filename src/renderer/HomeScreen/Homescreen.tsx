@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useIPC } from '../hooks/useIPC';
-import { Button, Input, Divider } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Button, Input, Divider, Tooltip } from 'antd';
+import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import SnippetList from './SnippetList';
 import SnippetActions from '../snippet/SnippetActions';
 import { useA, useS } from '../store';
@@ -9,6 +9,7 @@ import _ from 'lodash';
 import SnippetCreator from './SnippetCreator';
 import SearchTagList from './SearchTagList';
 import { SearchParams } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 const debouncedSearch = _.debounce((searchParams?: SearchParams) =>
   window.electron.ipcRenderer.sendSearch(searchParams)
@@ -18,6 +19,7 @@ export default function Homescreen() {
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const snippetSearch = useS((s) => s.snippetSearch);
   const snippetUpdater = useS((s) => s.snippetUpdater);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function setInitialStoreState() {
@@ -86,17 +88,30 @@ export default function Homescreen() {
             placeholder="Search snippets"
             style={{ width: '100%', maxWidth: 300 }}
           />
-          <Button
-            type="dashed"
-            icon={<PlusOutlined />}
-            onClick={SnippetActions.initializeNew}
-            onMouseEnter={SnippetActions.setSnippetBodyPreviewFromClipboard}
-            onMouseLeave={SnippetActions.clearSnippetBodyPreview}
-            disabled={newSnippetButtonDisabled()}
-          >
-            {!newSnippetButtonDisabled() && 'New Snippet'}
-            {newSnippetButtonDisabled() && 'Creation In Progress'}
-          </Button>
+          <div style={{ display: 'flex' }}>
+            <Tooltip title="Preferences">
+              <Button
+                onClick={() => {
+                  navigate('/preferences');
+                }}
+                type="ghost"
+                shape="circle"
+                icon={<SettingOutlined />}
+              />
+            </Tooltip>
+            <Button
+              type="dashed"
+              icon={<PlusOutlined />}
+              onClick={SnippetActions.initializeNew}
+              onMouseEnter={SnippetActions.setSnippetBodyPreviewFromClipboard}
+              onMouseLeave={SnippetActions.clearSnippetBodyPreview}
+              disabled={newSnippetButtonDisabled()}
+              style={{ marginLeft: 10 }}
+            >
+              {!newSnippetButtonDisabled() && 'New Snippet'}
+              {newSnippetButtonDisabled() && 'Creation In Progress'}
+            </Button>
+          </div>
         </div>
       </div>
       <div style={{ gridRow: 'search' }}>

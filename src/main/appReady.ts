@@ -26,26 +26,27 @@ export default function appReady() {
 
   const tray = new Tray(iconPath);
 
+  const openSnippets = async () => {
+    if (window) {
+      window.show();
+      routeToRenderer('/');
+    } else {
+      window = await createWindow();
+      window.on('closed', () => {
+        if (process.platform === 'darwin') {
+          app.dock.hide();
+        }
+        window = null;
+      });
+      window.on('ready-to-show', () => {
+        routeToRenderer('/');
+      });
+    }
+  };
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open Snippets',
-      click: async () => {
-        if (window) {
-          window.show();
-          routeToRenderer('/');
-        } else {
-          window = await createWindow();
-          window.on('closed', () => {
-            if (process.platform === 'darwin') {
-              app.dock.hide();
-            }
-            window = null;
-          });
-          window.on('ready-to-show', () => {
-            routeToRenderer('/');
-          });
-        }
-      },
+      click: openSnippets,
     },
     {
       label: 'Preferences',
@@ -75,5 +76,8 @@ export default function appReady() {
     },
   ]);
 
-  tray.setContextMenu(contextMenu);
+  // tray.setContextMenu(contextMenu);
+
+  tray.addListener('click', openSnippets);
+  openSnippets();
 }
