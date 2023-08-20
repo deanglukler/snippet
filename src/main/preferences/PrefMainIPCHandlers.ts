@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
   Preferences,
   IPCMainHandlerFunction,
@@ -5,6 +6,7 @@ import {
 } from '../../types';
 import database, { COLLECTION } from '../database';
 import getPreferences from './getPreferences';
+import initPreferences from '../../initPreferences';
 
 const updatePreference: IPCMainHandlerFunction<
   {
@@ -19,6 +21,12 @@ const updatePreference: IPCMainHandlerFunction<
 
   if (!prefs) {
     throw new Error('preferences not found');
+  }
+
+  if (!prefs[data.name]) {
+    log(`cannot find prefs with name '${data.name}', adding now`);
+    // @ts-ignore
+    prefs[data.name] = initPreferences[data.name];
   }
 
   prefs[data.name].value = data.value;

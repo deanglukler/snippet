@@ -47,6 +47,8 @@ class PreferencesModel extends ActionsBase<State<PreferencesModel>> {
   iconInTray: PreferencesType['iconInTray'] = initPreferences.iconInTray;
   snippetsDirectory: PreferencesType['snippetsDirectory'] =
     initPreferences.snippetsDirectory;
+  showOnlyLikedSnippets: PreferencesType['showOnlyLikedSnippets'] =
+    initPreferences.showOnlyLikedSnippets;
 }
 
 interface StoreModel {

@@ -23,7 +23,7 @@ export type IPCMainEventHandlerFn = (
   ...args: any[]
 ) => any;
 
-type PreferenceCategory = 'user';
+type PreferenceCategory = 'user' | 'list';
 
 export type Preferences = {
   iconInTray: {
@@ -32,6 +32,10 @@ export type Preferences = {
   };
   snippetsDirectory: {
     value: string;
+    category: PreferenceCategory;
+  };
+  showOnlyLikedSnippets: {
+    value: boolean;
     category: PreferenceCategory;
   };
 };

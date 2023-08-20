@@ -38,6 +38,7 @@ const dbPromise = new Promise<Loki>((resolve) => {
     const prefsEntry: Preferences = {
       iconInTray: initPreferences.iconInTray,
       snippetsDirectory: initPreferences.snippetsDirectory,
+      showOnlyLikedSnippets: initPreferences.showOnlyLikedSnippets,
     };
     prefs.insert(prefsEntry);
 

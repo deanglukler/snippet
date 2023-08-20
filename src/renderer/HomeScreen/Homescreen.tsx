@@ -1,7 +1,12 @@
 import { useEffect } from 'react';
 import { useIPC } from '../hooks/useIPC';
 import { Button, Input, Divider, Tooltip } from 'antd';
-import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  SettingOutlined,
+  HeartTwoTone,
+  HeartOutlined,
+} from '@ant-design/icons';
 import SnippetList from './SnippetList';
 import SnippetActions from '../snippet/SnippetActions';
 import { useA, useS } from '../store';
@@ -10,6 +15,7 @@ import SnippetCreator from './SnippetCreator';
 import SearchTagList from './SearchTagList';
 import { SearchParams } from '../../types';
 import { useNavigate } from 'react-router-dom';
+import PreferencesActions from '../preferences/PreferencesActions';
 
 const debouncedSearch = _.debounce((searchParams?: SearchParams) =>
   window.electron.ipcRenderer.sendSearch(searchParams)
@@ -19,6 +25,9 @@ export default function Homescreen() {
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const snippetSearch = useS((s) => s.snippetSearch);
   const snippetUpdater = useS((s) => s.snippetUpdater);
+  const prefs = useS((s) => s.preferences);
+  const prefsActions = useA((a) => a.preferences);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,6 +66,16 @@ export default function Homescreen() {
     return false;
   }
 
+  const showOnlyLikedSnippetsUpdater = async (b: boolean) => {
+    const p = await PreferencesActions.updateShowOnlyLikedSnippets(b);
+    prefsActions.set({
+      showOnlyLikedSnippets: {
+        ...prefs.showOnlyLikedSnippets,
+        value: p.showOnlyLikedSnippets.value,
+      },
+    });
+  };
+
   return (
     <div
       style={{
@@ -89,6 +108,24 @@ export default function Homescreen() {
             style={{ width: '100%', maxWidth: 300 }}
           />
           <div style={{ display: 'flex' }}>
+            <Tooltip title="Show Liked">
+              {prefs.showOnlyLikedSnippets.value && (
+                <Button
+                  onClick={() => showOnlyLikedSnippetsUpdater(false)}
+                  shape="circle"
+                  type="primary"
+                  icon={<HeartTwoTone />}
+                />
+              )}
+              {!prefs.showOnlyLikedSnippets.value && (
+                <Button
+                  onClick={() => showOnlyLikedSnippetsUpdater(true)}
+                  type="ghost"
+                  shape="circle"
+                  icon={<HeartOutlined />}
+                />
+              )}
+            </Tooltip>
             <Tooltip title="Preferences">
               <Button
                 onClick={() => {

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useA, useS } from '../store';
-import { SnippetData, SnippetDataSerialized } from '../../types';
+import { Preferences, SnippetData, SnippetDataSerialized } from '../../types';
 import _ from 'lodash';
 import safelyParseMetadata from '../snippet/safelyParseSnippetMetadata';
 import { useNavigate } from 'react-router-dom';
@@ -52,10 +52,12 @@ export function useIPC() {
     window.electron.ipcRenderer
       .getPrefs()
       .then((prefs) => {
-        prefsActions.set({
+        const nextPrefs: Preferences = {
           iconInTray: prefs.iconInTray,
           snippetsDirectory: prefs.snippetsDirectory,
-        });
+          showOnlyLikedSnippets: prefs.showOnlyLikedSnippets,
+        };
+        prefsActions.set(nextPrefs);
         return null;
       })
       .catch(log);
