@@ -2,6 +2,7 @@ import { IpcMainInvokeEvent } from 'electron';
 
 export type INVOKERS_CHANNELS =
   | 'snippet:save'
+  | 'snippet:update-metadata'
   | 'search:send'
   | 'tags:get'
   | 'snippet:copy'
@@ -40,6 +41,7 @@ export type PreferenceName = keyof Preferences;
 export interface SnippetMetaData {
   tags: string[];
   timestampMili: number;
+  liked: boolean;
 }
 
 export interface SnippetData {
@@ -53,6 +55,11 @@ export interface SnippetDataSerialized {
   body: string;
   metadata: string;
 }
+
+export type SnippetMetadataUpdate = {
+  snippetTitle: string;
+  metadata: Partial<SnippetMetaData>;
+};
 
 export type TagList = string[];
 

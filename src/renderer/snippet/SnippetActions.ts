@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { SNIPPET_SCHEMA } from '../../schema/SNIPPET_SCHEMA';
 import store from '../store';
 import { errorAndToast } from '../toast';
+import { SnippetMetaData } from '../../types';
 
 const submit = () => {
   const { body, title, tags } = store.getState().snippetUpdater;
@@ -93,6 +94,27 @@ function searchTagClick(tag: string) {
   store.getActions().snippetSearch.set({ searchTags: [..._.xor(st, [tag])] });
 }
 
+async function updateSnippetMetadata(
+  snippetTitle: string,
+  metadata: Partial<SnippetMetaData>
+) {
+  const updatedMetadata =
+    await window.electron.ipcRenderer.updateSnippetMetadata({
+      snippetTitle,
+      metadata,
+    });
+  if (!updatedMetadata) {
+    return console.warn('snippet metadata is null and it shouldnt be');
+  }
+  const snippets = [...store.getState().snippetSearch.results];
+  const snippetIndex = snippets.findIndex((a) => a.title === snippetTitle);
+  if (snippetIndex > -1) {
+    snippets[snippetIndex].metadata = updatedMetadata;
+    store.getActions().snippetSearch.set({ results: snippets });
+  }
+  return null;
+}
+
 export default {
   submit,
   setSnippetBodyFromClipboard,
@@ -103,4 +125,5 @@ export default {
   clearSnippetUpdaterData,
   refreshTagOptions,
   searchTagClick,
+  updateSnippetMetadata,
 };

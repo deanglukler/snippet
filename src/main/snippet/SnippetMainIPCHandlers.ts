@@ -1,5 +1,5 @@
 import { clipboard } from 'electron';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { rm } from 'fs/promises';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../../CONST';
@@ -12,6 +12,8 @@ import {
   SearchParams,
   SnippetData,
   SnippetDataSerialized,
+  SnippetMetaData,
+  SnippetMetadataUpdate,
   TagList,
 } from '../../types';
 
@@ -38,21 +40,15 @@ const saveSnippet: IPCMainHandlerFunction = async (
     }
   }
   function writeSnippet() {
-    // create a directory for the snippet
     const snipDir = getSnipDirPath(snippet.title);
     createDirIfNone(snipDir);
 
     try {
-      // write the snippet file
       writeFileSync(path.join(snipDir, snippet.title), snippet.body);
-
-      // write the metadata file
       writeFileSync(
         path.join(snipDir, METADATA_FILENAME),
         JSON.stringify(snippet.metadata)
       );
-
-      log('File written successfully!');
     } catch (error) {
       logAndThrow('Error writing snippet file.', error);
     }
@@ -117,10 +113,38 @@ const getTags: IPCMainHandlerFunction<null, TagList> = async (_event) => {
   }
 };
 
+const updateSnippetMetadata: IPCMainHandlerFunction<
+  SnippetMetadataUpdate,
+  SnippetMetaData | null
+> = async (_event, updateData) => {
+  try {
+    const snipDir = getSnipDirPath(updateData.snippetTitle);
+    const metadataPath = path.join(snipDir, METADATA_FILENAME);
+    const metadataJSON = readFileSync(metadataPath, 'utf8');
+    const metadata = JSON.parse(metadataJSON);
+
+    const updatedMetadata: SnippetMetaData = {
+      ...metadata,
+      ...updateData.metadata,
+    };
+    writeFileSync(
+      path.join(snipDir, METADATA_FILENAME),
+      JSON.stringify(updatedMetadata)
+    );
+
+    return updatedMetadata;
+  } catch (error) {
+    log(error);
+    sendErrorToRenderer(error);
+    return null;
+  }
+};
+
 export default {
   copy: copySnippet,
   save: saveSnippet,
   delete: deleteSnippet,
   search,
   getTags,
+  updateSnippetMetadata,
 };

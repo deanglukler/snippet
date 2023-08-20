@@ -7,6 +7,8 @@ import {
   Preferences,
   SearchParams,
   SnippetData,
+  SnippetMetaData,
+  SnippetMetadataUpdate,
 } from '../types';
 
 export type Channels =
@@ -61,6 +63,12 @@ const electronHandler = {
         'preferences:update' as INVOKERS_CHANNELS,
         update
       ) as Promise<Preferences>;
+    },
+    updateSnippetMetadata(updateData: SnippetMetadataUpdate) {
+      return ipcRenderer.invoke(
+        'snippet:update-metadata' as INVOKERS_CHANNELS,
+        updateData
+      ) as Promise<SnippetMetaData | null>;
     },
   },
 };

@@ -14,6 +14,10 @@ export default function initIpc() {
   mainIPCChannelHandler('snippet:save', SnippetHandlers.save);
   mainIPCChannelHandler('snippet:copy', SnippetHandlers.copy);
   mainIPCChannelHandler('snippet:delete', SnippetHandlers.delete);
+  mainIPCChannelHandler(
+    'snippet:update-metadata',
+    SnippetHandlers.updateSnippetMetadata
+  );
   mainIPCChannelHandler('search:send', SnippetHandlers.search);
   mainIPCChannelHandler('tags:get', SnippetHandlers.getTags);
   mainIPCChannelHandler('preferences:get', PrefMainIPCHandlers.getPreferences);

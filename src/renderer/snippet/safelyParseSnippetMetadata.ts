@@ -13,5 +13,6 @@ export default function safelyParseMetadata(
   return {
     tags: partialMetadata.tags || [],
     timestampMili: partialMetadata.timestampMili || 0,
+    liked: partialMetadata.liked || false,
   };
 }

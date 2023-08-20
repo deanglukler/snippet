@@ -1,11 +1,12 @@
 import { Button, Divider, Typography } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
+import { CopyOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import DeleteButton from '../components/DeleteButton';
 import SnippetBody from '../components/SnippetBody';
 import { errorAndToast, successToast } from '../toast';
 import { useTheme } from '../hooks';
 import { useRef } from 'react';
 import { SnippetData } from '../../types';
+import SnippetActions from '../snippet/SnippetActions';
 
 const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
   const { title, body, metadata } = snippet;
@@ -38,6 +39,24 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
           {title}
         </Typography.Title>
         <div>
+          {!metadata.liked && (
+            <Button
+              onClick={() => {
+                SnippetActions.updateSnippetMetadata(title, { liked: true });
+              }}
+              type="ghost"
+              icon={<HeartOutlined />}
+            />
+          )}
+          {metadata.liked && (
+            <Button
+              onClick={() => {
+                SnippetActions.updateSnippetMetadata(title, { liked: false });
+              }}
+              type="ghost"
+              icon={<HeartFilled />}
+            />
+          )}
           <Button
             type="text"
             icon={<CopyOutlined />}
