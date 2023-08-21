@@ -1,6 +1,6 @@
 import { SnippetMetaData } from '../../types';
 import _ from 'lodash';
-import log from '../util/log';
+import log from '../log';
 import findSnippets from './findSnippets';
 
 export default async function () {

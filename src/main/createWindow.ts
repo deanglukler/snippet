@@ -1,6 +1,6 @@
 import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
-import log from '../renderer/util/log';
+import log from './log';
 import MenuBuilder from './menu';
 import { getResourcePath, isDebug, resolveHtmlPath } from './util';
 

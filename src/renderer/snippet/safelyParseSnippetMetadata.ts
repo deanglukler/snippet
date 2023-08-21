@@ -1,4 +1,4 @@
-import log from '../util/log';
+import log from '../../main/log';
 import { SnippetMetaData } from '../../types';
 
 export default function safelyParseMetadata(

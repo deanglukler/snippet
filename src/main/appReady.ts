@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { getResourcePath } from './util';
 import createWindow from './createWindow';
-import log from '../renderer/util/log';
+import log from './log';
 import routeToRenderer from './toRenderer/routeToRenderer';
 import getPreferences from './preferences/getPreferences';
 

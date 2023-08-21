@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Loki from 'lokijs';
-import log from '../renderer/util/log';
+import log from './log';
 import { DATABASE_PATH, SNIPPET_APPLICATION_SUPPORT } from '../CONST';
 import { Preferences } from '../types';
 import initPreferences from '../initPreferences';

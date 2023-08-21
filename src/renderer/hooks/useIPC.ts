@@ -4,7 +4,7 @@ import { SnippetData, SnippetDataSerialized } from '../../types';
 import _ from 'lodash';
 import safelyParseMetadata from '../snippet/safelyParseSnippetMetadata';
 import { useNavigate } from 'react-router-dom';
-import log from '../util/log';
+import log from '../../main/log';
 import initPreferences from '../../initPreferences';
 
 export function useIPC() {

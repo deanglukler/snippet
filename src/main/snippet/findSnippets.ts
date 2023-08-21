@@ -1,11 +1,11 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../../CONST';
-import log from '../util/log';
+import log from '../log';
 import { SearchParams, SnippetDataSerialized } from '../../types';
 import FuzzySearch from 'fuzzy-search';
-import logAndThrow from '../util/logAndThrow';
-import safelyParseMetadata from './safelyParseSnippetMetadata';
+import logAndThrow from '../logAndThrow';
+import safelyParseMetadata from '../../renderer/snippet/safelyParseSnippetMetadata';
 import _ from 'lodash';
 
 export default async function (

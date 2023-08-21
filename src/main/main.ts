@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import mainGetTags from '../renderer/snippet/mainGetTags';
+import mainGetTags from './snippet/mainGetTags';
 
 import appReady from './appReady';
 import initIpc from './initIpc';

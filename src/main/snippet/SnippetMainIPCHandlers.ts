@@ -5,8 +5,8 @@ import path from 'path';
 import { METADATA_FILENAME, SNIPPETS } from '../../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
-import log from '../../renderer/util/log';
-import logAndThrow from '../../renderer/util/logAndThrow';
+import log from '../log';
+import logAndThrow from '../logAndThrow';
 import {
   IPCMainHandlerFunction,
   SearchParams,
@@ -18,8 +18,8 @@ import {
 } from '../../types';
 
 import dataToRenderer from '../toRenderer/dataToRenderer';
-import findSnippets from '../../renderer/snippet/findSnippets';
-import mainGetTags from '../../renderer/snippet/mainGetTags';
+import findSnippets from './findSnippets';
+import mainGetTags from './mainGetTags';
 
 function getSnipDirPath(title: string) {
   return path.join(SNIPPETS, title);
