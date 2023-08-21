@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { getAppTheme } from './appTheme';
 
 export function useTheme() {
-  const mode = useColorScheme();
-  return getAppTheme(mode);
+  // const mode = useColorScheme();
+  return getAppTheme('light');
 }
 
 export function useColorScheme() {
