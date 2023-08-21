@@ -7,6 +7,7 @@ import FuzzySearch from 'fuzzy-search';
 import logAndThrow from '../logAndThrow';
 import safelyParseMetadata from '../../renderer/snippet/safelyParseSnippetMetadata';
 import _ from 'lodash';
+import getPreferences from '../preferences/getPreferences';
 
 export default async function (
   search?: SearchParams
@@ -38,6 +39,7 @@ export default async function (
   const snippetMetadatasUnparsed = await readFilesAsyncHelper(
     snippetTitles.map((f) => path.join(SNIPPETS, f, METADATA_FILENAME))
   );
+  const prefs = await getPreferences();
   const snippetMetadatas = snippetMetadatasUnparsed.map(safelyParseMetadata);
 
   const snippets: { [key: string]: SnippetDataSerialized } = {};
@@ -45,6 +47,11 @@ export default async function (
     const title = snippetTitles[i];
     const body = snippetBodies[i];
     const metadata = snippetMetadatas[i];
+
+    if (prefs.showOnlyLikedSnippets.value && !metadata.liked) {
+      continue;
+    }
+
     const searchableKeyName = title + body + metadata.tags.join(' ');
     snippets[searchableKeyName] = {
       title,

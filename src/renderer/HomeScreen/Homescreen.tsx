@@ -126,7 +126,7 @@ export default function Homescreen() {
           />
           <div style={{ display: 'flex' }}>
             {prefs.showOnlyLikedSnippets.value && (
-              <Tooltip title="Hide Liked">
+              <Tooltip title="Show All">
                 <Button
                   onClick={() => showOnlyLikedSnippetsUpdater(false)}
                   shape="circle"
@@ -136,7 +136,7 @@ export default function Homescreen() {
               </Tooltip>
             )}
             {!prefs.showOnlyLikedSnippets.value && (
-              <Tooltip title="Show Liked">
+              <Tooltip title="Only Liked">
                 <Button
                   onClick={() => showOnlyLikedSnippetsUpdater(true)}
                   type="ghost"
