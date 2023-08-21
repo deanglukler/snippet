@@ -26,7 +26,12 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
   }
 
   return (
-    <div ref={ref} className="list-card" key={title}>
+    <div
+      ref={ref}
+      className="list-card"
+      style={{ backgroundColor: theme.token.colorBgContainer }}
+      key={title}
+    >
       <div
         style={{
           display: 'flex',
@@ -86,7 +91,7 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
       )}
       <Divider style={{ margin: '10px 0' }} />
       <div>
-        <SnippetBody body={body} theme={theme} refToScrollOnCollapse={ref} />
+        <SnippetBody body={body} refToScrollOnCollapse={ref} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
         <DeleteButton

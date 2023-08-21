@@ -37,7 +37,6 @@ export default function () {
               <Typography.Title level={3}>Clipboard Preview:</Typography.Title>
               <SnippetBody
                 body={snippetUpdater.bodyPreview}
-                theme={theme}
                 truncateHeight={500}
               />
             </div>
@@ -87,11 +86,7 @@ export default function () {
           </div>
           <Divider />
           <div>
-            <SnippetBody
-              body={snippetUpdater.body}
-              theme={theme}
-              truncateHeight={500}
-            />
+            <SnippetBody body={snippetUpdater.body} truncateHeight={500} />
           </div>
         </AnimatedBorderBox>
       )}

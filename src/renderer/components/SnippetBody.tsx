@@ -1,13 +1,15 @@
 import { ReactNode, useRef, useState, useEffect } from 'react';
 import { Button } from 'antd';
+import { useTheme } from '../hooks';
 import './SnippetBody.css';
 
 const SnippetBody: React.FC<{
   body: string;
-  theme: any;
   truncateHeight?: number;
   refToScrollOnCollapse?: React.RefObject<HTMLDivElement>;
-}> = ({ body, theme, truncateHeight = 170, refToScrollOnCollapse }) => {
+}> = ({ body, truncateHeight = 170, refToScrollOnCollapse }) => {
+  const theme = useTheme();
+
   return (
     <TruncatedComponent
       height={truncateHeight}

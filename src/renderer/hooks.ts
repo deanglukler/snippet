@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import { getAppTheme } from './appTheme';
+import { theme } from 'antd';
+
+const { defaultAlgorithm, darkAlgorithm } = theme;
 
 export function useTheme() {
-  // const mode = useColorScheme();
-  return getAppTheme('light');
+  const mode = useColorScheme();
+  return {
+    algorithm: mode === 'dark' ? darkAlgorithm : defaultAlgorithm,
+    ...getAppTheme(mode),
+  };
 }
 
 export function useColorScheme() {
