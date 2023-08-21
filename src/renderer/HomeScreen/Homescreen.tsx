@@ -71,10 +71,7 @@ export default function Homescreen() {
   const showOnlyLikedSnippetsUpdater = async (b: boolean) => {
     const p = await PreferencesActions.updateShowOnlyLikedSnippets(b);
     prefsActions.set({
-      showOnlyLikedSnippets: {
-        ...prefs.showOnlyLikedSnippets,
-        value: p.showOnlyLikedSnippets.value,
-      },
+      showOnlyLikedSnippets: p.showOnlyLikedSnippets,
     });
   };
 
@@ -86,10 +83,7 @@ export default function Homescreen() {
     }
     const p = await PreferencesActions.updateShowTags(b);
     prefsActions.set({
-      showTags: {
-        ...prefs.showTags,
-        value: p.showTags.value,
-      },
+      showTags: p.showTags,
     });
   };
 
@@ -125,7 +119,7 @@ export default function Homescreen() {
             style={{ width: '100%', maxWidth: 300 }}
           />
           <div style={{ display: 'flex' }}>
-            {prefs.showOnlyLikedSnippets.value && (
+            {prefs.showOnlyLikedSnippets && (
               <Tooltip title="Show All">
                 <Button
                   onClick={() => showOnlyLikedSnippetsUpdater(false)}
@@ -135,7 +129,7 @@ export default function Homescreen() {
                 />
               </Tooltip>
             )}
-            {!prefs.showOnlyLikedSnippets.value && (
+            {!prefs.showOnlyLikedSnippets && (
               <Tooltip title="Only Liked">
                 <Button
                   onClick={() => showOnlyLikedSnippetsUpdater(true)}
@@ -145,7 +139,7 @@ export default function Homescreen() {
                 />
               </Tooltip>
             )}
-            {prefs.showTags.value && (
+            {prefs.showTags && (
               <Tooltip title="Hide Tags">
                 <Button
                   onClick={() => showTagsUpdater(false)}
@@ -155,7 +149,7 @@ export default function Homescreen() {
                 />
               </Tooltip>
             )}
-            {!prefs.showTags.value && (
+            {!prefs.showTags && (
               <Tooltip title="Show Tags">
                 <Button
                   onClick={() => showTagsUpdater(true)}
@@ -191,7 +185,7 @@ export default function Homescreen() {
         </div>
       </div>
       <div style={{ gridRow: 'search' }}>
-        {prefs.showTags.value && <SearchTagList />}
+        {prefs.showTags && <SearchTagList />}
         <Divider />
       </div>
       <div style={{ gridRow: 'new-snippet' }}>

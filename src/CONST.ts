@@ -3,7 +3,7 @@ import path from 'path';
 
 export const DOCUMENTS = app.getPath('documents');
 export const USER_DATA = app.getPath('userData');
-export const SNIPPET_APPLICATION_SUPPORT = path.join(USER_DATA, 'v0');
+export const SNIPPET_APPLICATION_SUPPORT = path.join(USER_DATA, 'snippet-v0');
 export const DATABASE_PATH = path.join(
   SNIPPET_APPLICATION_SUPPORT,
   'snippet-app-database.lokidb'

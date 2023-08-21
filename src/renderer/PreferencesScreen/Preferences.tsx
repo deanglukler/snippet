@@ -38,10 +38,10 @@ export default function () {
               Boolean(checked)
             );
             prefsActions.set({
-              iconInTray: { ...prefs.iconInTray, value: p.iconInTray.value },
+              iconInTray: p.iconInTray,
             });
           }}
-          checked={prefs.iconInTray.value}
+          checked={prefs.iconInTray}
         >
           Show Icon in Status Bar
         </Checkbox>

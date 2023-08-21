@@ -24,18 +24,9 @@ export type IPCMainEventHandlerFn = (
 ) => any;
 
 export type Preferences = {
-  iconInTray: {
-    value: boolean;
-    category: 'user';
-  };
-  showOnlyLikedSnippets: {
-    value: boolean;
-    category: 'homepage';
-  };
-  showTags: {
-    value: boolean;
-    category: 'homepage';
-  };
+  iconInTray: boolean;
+  showOnlyLikedSnippets: boolean;
+  showTags: boolean;
 };
 
 export type PreferenceName = keyof Preferences;

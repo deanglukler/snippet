@@ -79,7 +79,7 @@ function buildTray() {
 
 async function manageTray() {
   const prefs = await getPreferences();
-  const iconInTray = prefs.iconInTray.value;
+  const iconInTray = prefs.iconInTray;
   if (window && !tray && iconInTray) {
     buildTray();
     if (tray) {

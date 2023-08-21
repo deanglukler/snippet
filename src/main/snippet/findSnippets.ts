@@ -48,7 +48,7 @@ export default async function (
     const body = snippetBodies[i];
     const metadata = snippetMetadatas[i];
 
-    if (prefs.showOnlyLikedSnippets.value && !metadata.liked) {
+    if (prefs.showOnlyLikedSnippets && !metadata.liked) {
       continue;
     }
 

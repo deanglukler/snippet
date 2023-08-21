@@ -37,6 +37,7 @@ module.exports = {
     'prefer-object-spread': 'off',
     'guard-for-in': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    'no-continue': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
