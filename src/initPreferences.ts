@@ -1,9 +1,9 @@
 import { Preferences } from './types';
 
-const prefs: Preferences = {
+const prefs: Preferences = Object.freeze({
   iconInTray: { value: true, category: 'user' },
-  snippetsDirectory: { value: 'DEFAULT', category: 'user' },
-  showOnlyLikedSnippets: { value: false, category: 'list' },
-};
+  showOnlyLikedSnippets: { value: false, category: 'homepage' },
+  showTags: { value: false, category: 'homepage' },
+});
 
 export default prefs;

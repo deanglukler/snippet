@@ -23,20 +23,18 @@ export type IPCMainEventHandlerFn = (
   ...args: any[]
 ) => any;
 
-type PreferenceCategory = 'user' | 'list';
-
 export type Preferences = {
   iconInTray: {
     value: boolean;
-    category: PreferenceCategory;
-  };
-  snippetsDirectory: {
-    value: string;
-    category: PreferenceCategory;
+    category: 'user';
   };
   showOnlyLikedSnippets: {
     value: boolean;
-    category: PreferenceCategory;
+    category: 'homepage';
+  };
+  showTags: {
+    value: boolean;
+    category: 'homepage';
   };
 };
 

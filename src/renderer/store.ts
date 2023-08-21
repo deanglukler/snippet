@@ -7,7 +7,7 @@ import {
   State,
 } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
-import { Preferences as PreferencesType, SnippetData } from '../types';
+import { Preferences, SnippetData } from '../types';
 import initPreferences from '../initPreferences';
 
 class ActionsBase<T extends object = never> {
@@ -44,11 +44,10 @@ class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
 }
 
 class PreferencesModel extends ActionsBase<State<PreferencesModel>> {
-  iconInTray: PreferencesType['iconInTray'] = initPreferences.iconInTray;
-  snippetsDirectory: PreferencesType['snippetsDirectory'] =
-    initPreferences.snippetsDirectory;
-  showOnlyLikedSnippets: PreferencesType['showOnlyLikedSnippets'] =
+  iconInTray: Preferences['iconInTray'] = initPreferences.iconInTray;
+  showOnlyLikedSnippets: Preferences['showOnlyLikedSnippets'] =
     initPreferences.showOnlyLikedSnippets;
+  showTags: Preferences['showTags'] = initPreferences.showTags;
 }
 
 interface StoreModel {

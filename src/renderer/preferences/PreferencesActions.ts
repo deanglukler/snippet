@@ -14,7 +14,16 @@ async function updateShowOnlyLikedSnippets(value: boolean) {
   return res;
 }
 
+async function updateShowTags(value: boolean) {
+  const res = await window.electron.ipcRenderer.updatePrefs({
+    name: 'showTags',
+    value,
+  });
+  return res;
+}
+
 export default {
   updateIconInTray,
   updateShowOnlyLikedSnippets,
+  updateShowTags,
 };

@@ -6,6 +6,8 @@ import {
   SettingOutlined,
   HeartTwoTone,
   HeartOutlined,
+  TagsTwoTone,
+  TagsOutlined,
 } from '@ant-design/icons';
 import SnippetList from './SnippetList';
 import SnippetActions from '../snippet/SnippetActions';
@@ -76,6 +78,21 @@ export default function Homescreen() {
     });
   };
 
+  const showTagsUpdater = async (b: boolean) => {
+    if (b === false) {
+      setSnippetSearch({
+        searchTags: [],
+      });
+    }
+    const p = await PreferencesActions.updateShowTags(b);
+    prefsActions.set({
+      showTags: {
+        ...prefs.showTags,
+        value: p.showTags.value,
+      },
+    });
+  };
+
   return (
     <div
       style={{
@@ -108,24 +125,46 @@ export default function Homescreen() {
             style={{ width: '100%', maxWidth: 300 }}
           />
           <div style={{ display: 'flex' }}>
-            <Tooltip title="Show Liked">
-              {prefs.showOnlyLikedSnippets.value && (
+            {prefs.showOnlyLikedSnippets.value && (
+              <Tooltip title="Hide Liked">
                 <Button
                   onClick={() => showOnlyLikedSnippetsUpdater(false)}
                   shape="circle"
                   type="primary"
                   icon={<HeartTwoTone />}
                 />
-              )}
-              {!prefs.showOnlyLikedSnippets.value && (
+              </Tooltip>
+            )}
+            {!prefs.showOnlyLikedSnippets.value && (
+              <Tooltip title="Show Liked">
                 <Button
                   onClick={() => showOnlyLikedSnippetsUpdater(true)}
                   type="ghost"
                   shape="circle"
                   icon={<HeartOutlined />}
                 />
-              )}
-            </Tooltip>
+              </Tooltip>
+            )}
+            {prefs.showTags.value && (
+              <Tooltip title="Hide Tags">
+                <Button
+                  onClick={() => showTagsUpdater(false)}
+                  shape="circle"
+                  type="primary"
+                  icon={<TagsTwoTone />}
+                />
+              </Tooltip>
+            )}
+            {!prefs.showTags.value && (
+              <Tooltip title="Show Tags">
+                <Button
+                  onClick={() => showTagsUpdater(true)}
+                  type="ghost"
+                  shape="circle"
+                  icon={<TagsOutlined />}
+                />
+              </Tooltip>
+            )}
             <Tooltip title="Preferences">
               <Button
                 onClick={() => {
@@ -152,7 +191,7 @@ export default function Homescreen() {
         </div>
       </div>
       <div style={{ gridRow: 'search' }}>
-        <SearchTagList />
+        {prefs.showTags.value && <SearchTagList />}
         <Divider />
       </div>
       <div style={{ gridRow: 'new-snippet' }}>

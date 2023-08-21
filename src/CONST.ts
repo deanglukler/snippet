@@ -6,7 +6,7 @@ export const USER_DATA = app.getPath('userData');
 export const SNIPPET_APPLICATION_SUPPORT = path.join(USER_DATA, 'v0');
 export const DATABASE_PATH = path.join(
   SNIPPET_APPLICATION_SUPPORT,
-  'database.lokidb'
+  'snippet-app-database.lokidb'
 );
 
 export const SNIPPETS = path.join(DOCUMENTS, 'snippet');
