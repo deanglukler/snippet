@@ -20,13 +20,12 @@
 }
 .main-box {
   position: relative;
-  border: var(--box-anim-thickness) solid var(--light-gray);
+  border: var(--box-anim-thickness) solid;
 }
 .bar {
   position: absolute;
   width: 40px;
   height: var(--box-anim-thickness);
-  background: #fff;
   transition: all var(--box-anim-timing) linear;
   -webkit-animation-duration: var(--box-anim-timing);
   animation-duration: var(--box-anim-timing);
