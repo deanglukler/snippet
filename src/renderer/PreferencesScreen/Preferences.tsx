@@ -1,10 +1,14 @@
-import { Button, Checkbox, Typography } from 'antd';
+import { Button, Checkbox, Radio, RadioChangeEvent, Typography } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useIPC } from '../hooks/useIPC';
 import { useA, useS } from '../store';
 import PreferencesActions from '../preferences/PreferencesActions';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useNavigate } from 'react-router-dom';
+
+const prefHeaderStyle = {
+  margin: '10px 0 8px 0',
+};
 
 export default function () {
   useIPC();
@@ -28,7 +32,10 @@ export default function () {
           alignItems: 'start',
         }}
       >
-        <Typography.Title level={3}>Preferences</Typography.Title>
+        <Typography.Title style={prefHeaderStyle} level={3}>
+          Preferences
+        </Typography.Title>
+        <Typography.Text type="secondary">ICON</Typography.Text>
         <Checkbox
           onClick={async (e) => {
             // @ts-ignorets-ignore
@@ -45,6 +52,24 @@ export default function () {
         >
           Show Icon in Status Bar
         </Checkbox>
+        <Typography.Text style={prefHeaderStyle} type="secondary">
+          COLOR THEME
+        </Typography.Text>
+        <Radio.Group
+          onChange={async (e: RadioChangeEvent) => {
+            const p = await PreferencesActions.updateColorScheme(
+              e.target.value
+            );
+            prefsActions.set({
+              colorScheme: p.colorScheme,
+            });
+          }}
+          value={prefs.colorScheme}
+        >
+          <Radio value="light">Light</Radio>
+          <Radio value="dark">Dark</Radio>
+          <Radio value="system">System</Radio>
+        </Radio.Group>
         <Button
           style={{ marginTop: 30, padding: 0 }}
           onClick={() => {

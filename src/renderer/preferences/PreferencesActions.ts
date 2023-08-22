@@ -1,3 +1,5 @@
+import { ColorScheme } from '../../types';
+
 async function updateIconInTray(value: boolean) {
   const res = await window.electron.ipcRenderer.updatePrefs({
     name: 'iconInTray',
@@ -22,8 +24,17 @@ async function updateShowTags(value: boolean) {
   return res;
 }
 
+async function updateColorScheme(value: ColorScheme) {
+  const res = await window.electron.ipcRenderer.updatePrefs({
+    name: 'colorScheme',
+    value,
+  });
+  return res;
+}
+
 export default {
   updateIconInTray,
   updateShowOnlyLikedSnippets,
   updateShowTags,
+  updateColorScheme,
 };

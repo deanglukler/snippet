@@ -23,11 +23,13 @@ export type IPCMainEventHandlerFn = (
   ...args: any[]
 ) => any;
 
+export type ColorScheme = 'light' | 'dark' | 'system';
+
 export type Preferences = {
   iconInTray: boolean;
   showOnlyLikedSnippets: boolean;
   showTags: boolean;
-  colorScheme: 'light' | 'dark' | 'system';
+  colorScheme: ColorScheme;
 };
 
 export type PreferenceName = keyof Preferences;
