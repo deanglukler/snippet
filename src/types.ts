@@ -27,6 +27,7 @@ export type Preferences = {
   iconInTray: boolean;
   showOnlyLikedSnippets: boolean;
   showTags: boolean;
+  colorScheme: 'light' | 'dark' | 'system';
 };
 
 export type PreferenceName = keyof Preferences;

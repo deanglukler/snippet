@@ -38,6 +38,7 @@ module.exports = {
     'guard-for-in': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'no-continue': 'off',
+    'react/jsx-no-useless-fragment': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

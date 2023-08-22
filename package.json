@@ -79,6 +79,7 @@
     "react-router-dom": "^6.8.1",
     "react-toastify": "^9.1.1",
     "redux-logger": "^3.0.6",
+    "use-system-theme": "^0.1.1",
     "yup": "^1.0.2"
   },
   "devDependencies": {

@@ -56,7 +56,10 @@ export function useIPC() {
         const nextPrefs = {};
         for (const k in initPreferences) {
           // @ts-ignore
-          nextPrefs[k] = prefs[k];
+          if (prefs[k]) {
+            // @ts-ignore
+            nextPrefs[k] = prefs[k];
+          }
         }
         prefsActions.set(nextPrefs);
         return null;

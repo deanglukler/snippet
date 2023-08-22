@@ -49,6 +49,7 @@ class PreferencesModel extends ActionsBase<State<PreferencesModel>> {
   showOnlyLikedSnippets: Preferences['showOnlyLikedSnippets'] =
     initPreferences.showOnlyLikedSnippets;
   showTags: Preferences['showTags'] = initPreferences.showTags;
+  colorScheme: Preferences['colorScheme'] = initPreferences.colorScheme;
 }
 
 interface StoreModel {
