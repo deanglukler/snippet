@@ -2,6 +2,9 @@
 import { URL } from 'url';
 import path from 'path';
 import { app } from 'electron';
+import { existsSync, mkdirSync } from 'fs';
+import logAndThrow from './logAndThrow';
+import log from './log';
 
 export function resolveHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {
@@ -21,3 +24,14 @@ export function getResourcePath(...p: string[]) {
 
 export const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
+export function createDirIfNone(directory: string) {
+  if (!existsSync(directory)) {
+    try {
+      mkdirSync(directory, { recursive: true });
+      log('Created new directory at: ', directory);
+    } catch (error) {
+      logAndThrow('Error creating directory.', error);
+    }
+  }
+}

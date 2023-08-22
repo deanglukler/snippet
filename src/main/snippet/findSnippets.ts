@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { METADATA_FILENAME, SNIPPETS } from '../../CONST';
+import { METADATA_FILENAME, SNIPPETS_DIR } from '../../CONST';
 import log from '../log';
 import { SearchParams, SnippetDataSerialized } from '../../types';
 import FuzzySearch from 'fuzzy-search';
@@ -13,7 +13,7 @@ export default async function (
   search?: SearchParams
 ): Promise<SnippetDataSerialized[]> {
   async function snippetContainers() {
-    const dirResults = await fs.readdir(SNIPPETS);
+    const dirResults = await fs.readdir(SNIPPETS_DIR);
     return dirResults.filter((file) => !file.startsWith('.'));
   }
 
@@ -34,10 +34,10 @@ export default async function (
 
   const snippetTitles = await snippetContainers();
   const snippetBodies = await readFilesAsyncHelper(
-    snippetTitles.map((f) => path.join(SNIPPETS, f, f))
+    snippetTitles.map((f) => path.join(SNIPPETS_DIR, f, f))
   );
   const snippetMetadatasUnparsed = await readFilesAsyncHelper(
-    snippetTitles.map((f) => path.join(SNIPPETS, f, METADATA_FILENAME))
+    snippetTitles.map((f) => path.join(SNIPPETS_DIR, f, METADATA_FILENAME))
   );
   const prefs = await getPreferences();
   const snippetMetadatas = snippetMetadatasUnparsed.map(safelyParseMetadata);

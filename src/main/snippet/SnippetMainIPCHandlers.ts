@@ -1,8 +1,8 @@
 import { clipboard } from 'electron';
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
+import { existsSync, writeFileSync, readFileSync } from 'fs';
 import { rm } from 'fs/promises';
 import path from 'path';
-import { METADATA_FILENAME, SNIPPETS } from '../../CONST';
+import { METADATA_FILENAME, SNIPPETS_DIR } from '../../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
 import log from '../log';
@@ -20,25 +20,16 @@ import {
 import dataToRenderer from '../toRenderer/dataToRenderer';
 import findSnippets from './findSnippets';
 import mainGetTags from './mainGetTags';
+import { createDirIfNone } from '../util';
 
 function getSnipDirPath(title: string) {
-  return path.join(SNIPPETS, title);
+  return path.join(SNIPPETS_DIR, title);
 }
 
 const saveSnippet: IPCMainHandlerFunction = async (
   _event,
   snippet: SnippetData
 ) => {
-  function createDirIfNone(directory: string) {
-    if (!existsSync(directory)) {
-      try {
-        mkdirSync(directory, { recursive: true });
-        log('Created new directory at: ', directory);
-      } catch (error) {
-        logAndThrow('Error creating directory.', error);
-      }
-    }
-  }
   function writeSnippet() {
     const snipDir = getSnipDirPath(snippet.title);
     createDirIfNone(snipDir);
@@ -55,7 +46,7 @@ const saveSnippet: IPCMainHandlerFunction = async (
   }
 
   try {
-    createDirIfNone(SNIPPETS);
+    createDirIfNone(SNIPPETS_DIR);
 
     if (existsSync(getSnipDirPath(snippet.title))) {
       logAndThrow('Snippet with this title already exists');

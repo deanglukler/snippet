@@ -3,7 +3,8 @@ import mainGetTags from './snippet/mainGetTags';
 
 import appReady from './appReady';
 import initIpc from './initIpc';
-import { isDebug } from './util';
+import { isDebug, createDirIfNone } from './util';
+import { SNIPPETS_DIR } from '../CONST';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -14,9 +15,7 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-/**
- * Add event listeners...
- */
+createDirIfNone(SNIPPETS_DIR);
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

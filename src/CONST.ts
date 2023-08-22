@@ -9,6 +9,6 @@ export const DATABASE_PATH = path.join(
   'snippet-app-database.lokidb'
 );
 
-export const SNIPPETS = path.join(DOCUMENTS, 'snippet');
+export const SNIPPETS_DIR = path.join(USER_DATA, 'snippet-collection');
 
 export const METADATA_FILENAME = 'metadata.json';
