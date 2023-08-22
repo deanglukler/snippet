@@ -18,9 +18,15 @@ export function useTheme() {
     document.documentElement.style.colorScheme = mode;
   }, [mode]);
 
+  if (mode === 'dark') {
+    return {
+      algorithm: darkAlgorithm,
+      ...getAppTheme('dark'),
+    };
+  }
   return {
-    algorithm: mode === 'dark' ? darkAlgorithm : defaultAlgorithm,
-    ...getAppTheme(mode),
+    algorithm: defaultAlgorithm,
+    ...getAppTheme('light'),
   };
 }
 

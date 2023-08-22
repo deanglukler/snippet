@@ -3,14 +3,6 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-:root {
-  --lighter-gray: #fafafa;
-  --light-gray: #f0f0f0;
-  --gray: #7d7d7d;
-
-  --border-radius: 17px;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -49,6 +41,6 @@ a:hover {
 }
 
 .scrollbar-style::-webkit-scrollbar-thumb {
-  background-color: var(--lighter-gray);
-  border: 1px solid var(--light-gray);
+  background-color: var(--colorBorder);
+  border: 1px solid var(--colorBorderBg);
 }

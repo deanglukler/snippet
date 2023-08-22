@@ -1,5 +1,3 @@
-/* note that some variables are used from other files ie --light-gray */
-
 :root {
   --box-anim-timing: 4s;
   /* anim delay must be half of anim timing */

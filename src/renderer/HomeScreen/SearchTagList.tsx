@@ -27,20 +27,20 @@ const SearchTagList: React.FC = () => {
           return (
             <Typography.Link
               onClick={() => SnippetActions.searchTagClick(tag)}
+              type="secondary"
               key={tag}
               style={Object.assign(
                 {
-                  color: 'var(--gray)',
                   fontWeight: isActiveInSearch ? 600 : 'unset',
                   padding: '3px 10px',
-                  borderRadius: 'var(--border-radius)',
+                  borderRadius: 'var(--borderRadius)',
                   border: '1px solid transparent',
                   margin: 0,
                 },
                 isActiveInSearch
                   ? {
                       /* extra styles if active */
-                      border: '1px solid var(--light-gray)',
+                      border: '1px solid var(--colorBorder)',
                       color: 'green',
                     }
                   : {

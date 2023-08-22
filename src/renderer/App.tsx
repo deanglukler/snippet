@@ -2,12 +2,12 @@ import { StoreProvider } from 'easy-peasy';
 import store from './store';
 import './App.css';
 import './BorderAnimation.css';
-import ConfigLayer from './ConfigLayer';
+import ConfigTheme from './ConfigTheme';
 
 export default function App() {
   return (
     <StoreProvider store={store}>
-      <ConfigLayer />
+      <ConfigTheme />
     </StoreProvider>
   );
 }

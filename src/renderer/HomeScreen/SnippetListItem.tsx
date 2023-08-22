@@ -3,14 +3,12 @@ import { CopyOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import DeleteButton from '../components/DeleteButton';
 import SnippetBody from '../components/SnippetBody';
 import { errorAndToast, successToast } from '../toast';
-import { useTheme } from '../hooks';
 import { useRef } from 'react';
 import { SnippetData } from '../../types';
 import SnippetActions from '../snippet/SnippetActions';
 
 const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
   const { title, body, metadata } = snippet;
-  const theme = useTheme();
   const ref = useRef<HTMLDivElement>(null);
 
   function copySnippet(b: string) {
@@ -26,12 +24,7 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
   }
 
   return (
-    <div
-      ref={ref}
-      className="list-card"
-      style={{ backgroundColor: theme.token.colorBgContainer }}
-      key={title}
-    >
+    <div ref={ref} className="list-card" key={title}>
       <div
         style={{
           display: 'flex',
@@ -82,7 +75,7 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
         >
           {metadata.tags.map((tag) => {
             return (
-              <Typography.Text key={tag} style={{ color: 'var(--gray)' }}>
+              <Typography.Text key={tag} type="secondary">
                 # {tag}
               </Typography.Text>
             );

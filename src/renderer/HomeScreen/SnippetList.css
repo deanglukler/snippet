@@ -1,8 +1,8 @@
 .list-card {
   display: flex;
   flex-direction: column;
-  /* background-color: var(--lighter-gray); */
+  background-color: var(--colorBgContainer);
   padding: 15px 25px;
-  border-radius: var(--border-radius);
+  border-radius: var(--borderRadius);
   margin-bottom: 20px;
 }

@@ -1,26 +1,25 @@
-import { useTheme } from './hooks';
-import { ConfigProvider } from 'antd';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import './BorderAnimation.css';
 import Homescreen from './HomeScreen/Homescreen';
 import Preferences from './PreferencesScreen/Preferences';
 import ToastComponent from './ToastComponent';
-import { useEffect } from 'react';
+import { theme } from 'antd';
 
-const ConfigLayer: React.FC = () => {
-  const appTheme = useTheme();
+const { useToken } = theme;
 
-  // useEffect(() => {
-  //   document.documentElement.style.colorScheme = appTheme;
-  // }, [appTheme]);
+const Root: React.FC = () => {
+  const { token } = useToken();
+
+  const rootStyles = `
+  :root {
+    --colorBgContainer: ${token.colorBgContainer};
+    --colorBgContainer: ${token.colorBorderBg};
+    --colorBorder: ${token.colorBorder};
+    --borderRadius: ${token.borderRadius}px;
+  }
+`;
 
   return (
-    <ConfigProvider
-      theme={{
-        ...appTheme,
-      }}
-    >
+    <>
       <Router>
         <Routes>
           <Route path="/" element={<Homescreen />} />
@@ -28,8 +27,9 @@ const ConfigLayer: React.FC = () => {
         </Routes>
       </Router>
       <ToastComponent />
-    </ConfigProvider>
+      <style>{rootStyles}</style>
+    </>
   );
 };
 
-export default ConfigLayer;
+export default Root;
