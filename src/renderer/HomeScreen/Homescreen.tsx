@@ -27,6 +27,7 @@ export default function Homescreen() {
   const setSnippetSearch = useA((a) => a.snippetSearch.set);
   const snippetSearch = useS((s) => s.snippetSearch);
   const snippetUpdater = useS((s) => s.snippetUpdater);
+  const snippetUpdaterActions = useA((a) => a.snippetUpdater);
   const prefs = useS((s) => s.preferences);
   const prefsActions = useA((a) => a.preferences);
 
@@ -63,9 +64,37 @@ export default function Homescreen() {
     };
   }, []);
 
-  function newSnippetButtonDisabled() {
-    if (snippetUpdater.body) return true;
-    return false;
+  useEffect(() => {
+    const tima = setInterval(async () => {
+      try {
+        const txt = await navigator.clipboard.readText();
+        if (txt && snippetUpdater.noTextInClipboard) {
+          snippetUpdaterActions.set({ noTextInClipboard: false });
+        }
+        if (!txt && !snippetUpdater.noTextInClipboard) {
+          snippetUpdaterActions.set({ noTextInClipboard: true });
+        }
+      } catch (err) {
+        if (!snippetUpdater.noTextInClipboard) {
+          snippetUpdaterActions.set({ noTextInClipboard: true });
+        }
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(tima);
+    };
+  }, [snippetUpdaterActions, snippetUpdater.noTextInClipboard]);
+
+  function newSnippetButtonDisabled(): {
+    disabled: boolean;
+    text: string;
+  } {
+    if (snippetUpdater.noTextInClipboard)
+      return { disabled: true, text: 'Copy Text to Create' };
+    if (snippetUpdater.body)
+      return { disabled: true, text: 'Creation in Progress' };
+    return { disabled: false, text: 'New Snippet' };
   }
 
   const showOnlyLikedSnippetsUpdater = async (b: boolean) => {
@@ -175,11 +204,10 @@ export default function Homescreen() {
               onClick={SnippetActions.initializeNew}
               onMouseEnter={SnippetActions.setSnippetBodyPreviewFromClipboard}
               onMouseLeave={SnippetActions.clearSnippetBodyPreview}
-              disabled={newSnippetButtonDisabled()}
+              disabled={newSnippetButtonDisabled().disabled}
               style={{ marginLeft: 10 }}
             >
-              {!newSnippetButtonDisabled() && 'New Snippet'}
-              {newSnippetButtonDisabled() && 'Creation In Progress'}
+              {newSnippetButtonDisabled().text}
             </Button>
           </div>
         </div>

@@ -34,6 +34,7 @@ class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
     return true;
   });
   bodyPreview = '';
+  noTextInClipboard = true;
 }
 
 class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {

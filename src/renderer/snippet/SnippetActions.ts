@@ -33,7 +33,7 @@ const submit = () => {
     });
 };
 
-async function setSnippetBodyFromClipboard() {
+async function getBodyFromClipboard(): Promise<string> {
   let text = '';
   try {
     text = await navigator.clipboard.readText();
@@ -43,22 +43,18 @@ async function setSnippetBodyFromClipboard() {
       'No text in clipboard.  Copy text to start creating snippet.'
     );
   }
-  store
-    .getActions()
-    .snippetUpdater.set({ body: await navigator.clipboard.readText() });
+
+  return text;
+}
+
+async function setSnippetBodyFromClipboard() {
+  store.getActions().snippetUpdater.set({ body: await getBodyFromClipboard() });
 }
 
 async function setSnippetBodyPreviewFromClipboard() {
-  let text = '';
-  try {
-    text = await navigator.clipboard.readText();
-    if (!text) throw new Error('Text in clipboard empty');
-  } catch (err) {
-    errorAndToast(
-      'No text in clipboard.  Copy text to start creating snippet.'
-    );
-  }
-  store.getActions().snippetUpdater.set({ bodyPreview: text });
+  store
+    .getActions()
+    .snippetUpdater.set({ bodyPreview: await getBodyFromClipboard() });
 }
 
 function clearSnippetBodyPreview() {
