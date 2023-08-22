@@ -16,6 +16,11 @@ const SearchTagList: React.FC = () => {
           alignItems: 'baseline',
         }}
       >
+        {snippetSearch.tagOptions.length === 0 && (
+          <Typography.Text style={{ marginLeft: 10 }} type="secondary">
+            No Tags
+          </Typography.Text>
+        )}
         {snippetSearch.tagOptions.map((tag) => {
           const isActiveInSearch = snippetSearch.searchTags.includes(tag);
 
