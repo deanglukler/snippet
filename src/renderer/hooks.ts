@@ -32,6 +32,14 @@ export function useTheme() {
 
 function useSystemColor() {
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('dark');
+  const wmm = window.matchMedia('(prefers-color-scheme: dark)');
+  const initIsDark = wmm.matches;
+  const nxtColorScheme = initIsDark ? 'dark' : 'light';
+
+  if (colorScheme !== nxtColorScheme) {
+    setColorScheme(initIsDark ? 'dark' : 'light');
+  }
+
   useEffect(() => {
     window
       .matchMedia('(prefers-color-scheme: dark)')
