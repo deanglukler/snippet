@@ -23,8 +23,9 @@ export function useIPC() {
         const currentNamesList = snippetSearchResults.map((x) => x.title);
         const nextNamesList = nextResults.map((x) => x.title);
 
-        if (!_.isEqual(currentNamesList, nextNamesList))
+        if (!_.isEqual(currentNamesList, nextNamesList)) {
           resultsAreTheSame = false;
+        }
       }
 
       const nextResultsParsed: SnippetData[] = nextResults.map((res) => {
