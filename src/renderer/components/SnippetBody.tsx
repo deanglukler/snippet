@@ -89,7 +89,9 @@ function TruncatedComponent({
             left: 0,
             width: '100%',
             height: '70px',
-            background: `linear-gradient(to top, ${bgColor}, 30%, transparent`,
+            background: !expanded
+              ? `linear-gradient(to top, ${bgColor}, 30%, transparent`
+              : `transparent`,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
