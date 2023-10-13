@@ -2,10 +2,12 @@ import fs from 'fs';
 import Loki from 'lokijs';
 import log from './log';
 import { DATABASE_PATH, SNIPPET_APPLICATION_SUPPORT } from '../CONST';
-import { Preferences } from '../types';
 import initPreferences from '../initPreferences';
+import { DB } from '../types';
 
-const COLLECTION = { PREFERENCES: 'preferences' };
+const COLLECTION: { [key: string]: keyof DB } = {
+  PREFERENCES: 'preferences',
+};
 
 const dbPromise = new Promise<Loki>((resolve) => {
   if (fs.existsSync(DATABASE_PATH)) {
@@ -35,7 +37,7 @@ const dbPromise = new Promise<Loki>((resolve) => {
 
     const prefs = db.getCollection(COLLECTION.PREFERENCES);
 
-    const prefsEntry: Preferences = { ...initPreferences };
+    const prefsEntry: DB['preferences'] = { ...initPreferences };
     prefs.insert(prefsEntry);
 
     db.saveDatabase();

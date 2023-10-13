@@ -1,6 +1,7 @@
 import { Typography } from 'antd';
 import { useS } from '../store';
-import SnippetActions from '../snippet/SnippetActions';
+import SearchTag from './SearchTag';
+import { Fragment } from 'react';
 
 const SearchTagList: React.FC = () => {
   const snippetSearch = useS((s) => s.snippetSearch);
@@ -22,34 +23,10 @@ const SearchTagList: React.FC = () => {
           </Typography.Text>
         )}
         {snippetSearch.tagOptions.map((tag) => {
-          const isActiveInSearch = snippetSearch.searchTags.includes(tag);
-
           return (
-            <Typography.Link
-              onClick={() => SnippetActions.searchTagClick(tag)}
-              type="secondary"
-              key={tag}
-              style={Object.assign(
-                {
-                  fontWeight: isActiveInSearch ? 600 : 'unset',
-                  padding: '3px 10px',
-                  borderRadius: 'var(--borderRadius)',
-                  border: '1px solid transparent',
-                  margin: 0,
-                },
-                isActiveInSearch
-                  ? {
-                      /* extra styles if active */
-                      border: '1px solid var(--colorBorder)',
-                      color: 'green',
-                    }
-                  : {
-                      /* no extra styles if inactive */
-                    }
-              )}
-            >
-              # {tag}
-            </Typography.Link>
+            <Fragment key={tag}>
+              <SearchTag tag={tag} />
+            </Fragment>
           );
         })}
       </div>

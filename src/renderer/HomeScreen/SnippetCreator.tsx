@@ -1,6 +1,5 @@
 import { Button, Divider, Input, InputRef, Space, Typography } from 'antd';
 import _ from 'lodash';
-import { useTheme } from '../hooks';
 import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import SnippetActions from '../snippet/SnippetActions';
 import { useEffect, useRef } from 'react';
@@ -12,7 +11,6 @@ import SnippetBody from '../components/SnippetBody';
 
 export default function () {
   const snippetUpdater = useS((s) => s.snippetUpdater);
-  const theme = useTheme();
   const newSnippetTitleInputRef = useRef<InputRef>(null);
   const prevNewSnippetTitleInputRef = useRef<any>(null);
 

@@ -1,9 +1,5 @@
 import { log } from 'console';
-import {
-  Preferences,
-  IPCMainHandlerFunction,
-  PreferenceName,
-} from '../../types';
+import { DB, IPCMainHandlerFunction, PreferenceName } from '../../types';
 import database, { COLLECTION } from '../database';
 import getPreferences from './getPreferences';
 import initPreferences from '../../initPreferences';
@@ -12,12 +8,14 @@ import _ from 'lodash';
 const updatePreference: IPCMainHandlerFunction<
   {
     name: PreferenceName;
-    value: any;
+    value: DB['preferences'][PreferenceName];
   },
-  Preferences
+  DB['preferences']
 > = async (_e, data) => {
   const db = await database;
-  const prefsCollection = db.getCollection<Preferences>(COLLECTION.PREFERENCES);
+  const prefsCollection = db.getCollection<DB['preferences']>(
+    COLLECTION.PREFERENCES
+  );
   const prefs = prefsCollection.findOne();
 
   if (!prefs) {
@@ -30,6 +28,7 @@ const updatePreference: IPCMainHandlerFunction<
     prefs[data.name] = initPreferences[data.name];
   }
 
+  // @ts-ignore
   prefs[data.name] = data.value;
   prefsCollection.update(prefs);
   db.saveDatabase();

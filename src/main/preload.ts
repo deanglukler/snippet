@@ -2,9 +2,9 @@
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import {
+  DB,
   INVOKERS_CHANNELS,
   PreferenceName,
-  Preferences,
   SearchParams,
   SnippetData,
   SnippetMetaData,
@@ -56,13 +56,13 @@ const electronHandler = {
     getPrefs() {
       return ipcRenderer.invoke(
         'preferences:get' as INVOKERS_CHANNELS
-      ) as Promise<Preferences>;
+      ) as Promise<DB['preferences']>;
     },
     updatePrefs(update: { name: PreferenceName; value: any }) {
       return ipcRenderer.invoke(
         'preferences:update' as INVOKERS_CHANNELS,
         update
-      ) as Promise<Preferences>;
+      ) as Promise<DB['preferences']>;
     },
     updateSnippetMetadata(updateData: SnippetMetadataUpdate) {
       return ipcRenderer.invoke(

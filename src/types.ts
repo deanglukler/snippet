@@ -25,14 +25,16 @@ export type IPCMainEventHandlerFn = (
 
 export type ColorScheme = 'light' | 'dark' | 'system';
 
-export type Preferences = {
-  iconInTray: boolean;
-  showOnlyLikedSnippets: boolean;
-  showTags: boolean;
-  colorScheme: ColorScheme;
+export type DB = {
+  preferences: {
+    iconInTray: boolean;
+    showOnlyLikedSnippets: boolean;
+    showTags: boolean;
+    colorScheme: ColorScheme;
+  };
 };
 
-export type PreferenceName = keyof Preferences;
+export type PreferenceName = keyof DB['preferences'];
 
 export interface SnippetMetaData {
   tags: string[];

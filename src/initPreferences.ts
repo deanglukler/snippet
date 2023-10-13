@@ -1,6 +1,6 @@
-import { Preferences } from './types';
+import { DB } from './types';
 
-const prefs: Preferences = Object.freeze({
+const prefs: DB['preferences'] = Object.freeze({
   iconInTray: true,
   showOnlyLikedSnippets: false,
   showTags: false,

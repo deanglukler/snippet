@@ -39,6 +39,9 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'no-continue': 'off',
     'react/jsx-no-useless-fragment': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    'consistent-return': 'off',
+    'no-useless-return': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
