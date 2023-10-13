@@ -5,7 +5,7 @@ import _ from 'lodash';
 import safelyParseMetadata from '../snippet/safelyParseSnippetMetadata';
 import { useNavigate } from 'react-router-dom';
 import log from '../../main/log';
-import initPreferences from '../../initPreferences';
+import initState from '../../initState';
 
 export function useIPC() {
   const snippetSearchActions = useA((a) => a.snippetSearch);
@@ -55,7 +55,7 @@ export function useIPC() {
       .getPrefs()
       .then((prefs) => {
         const nextPrefs = {};
-        for (const k in initPreferences) {
+        for (const k in initState().preferences) {
           // @ts-ignore
           if (prefs[k]) {
             // @ts-ignore

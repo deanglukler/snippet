@@ -8,7 +8,7 @@ import {
 } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
 import { DB, SnippetData } from '../types';
-import initPreferences from '../initPreferences';
+import initState from '../initState';
 
 class ActionsBase<T extends object = never> {
   set = action<T, Partial<T>>((state, setter) => {
@@ -45,11 +45,13 @@ class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
 }
 
 class PreferencesModel extends ActionsBase<State<PreferencesModel>> {
-  iconInTray: DB['preferences']['iconInTray'] = initPreferences.iconInTray;
+  iconInTray: DB['preferences']['iconInTray'] =
+    initState().preferences.iconInTray;
   showOnlyLikedSnippets: DB['preferences']['showOnlyLikedSnippets'] =
-    initPreferences.showOnlyLikedSnippets;
-  showTags: DB['preferences']['showTags'] = initPreferences.showTags;
-  colorScheme: DB['preferences']['colorScheme'] = initPreferences.colorScheme;
+    initState().preferences.showOnlyLikedSnippets;
+  showTags: DB['preferences']['showTags'] = initState().preferences.showTags;
+  colorScheme: DB['preferences']['colorScheme'] =
+    initState().preferences.colorScheme;
 }
 
 interface StoreModel {

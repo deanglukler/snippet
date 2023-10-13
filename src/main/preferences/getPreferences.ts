@@ -1,8 +1,9 @@
 import { DB } from '../../types';
-import database, { COLLECTION } from '../database';
+import { COLLECTION } from '../db/collection';
+import connection from '../db/connection';
 
 export default async function () {
-  const db = await database;
+  const db = await connection;
   const prefsCollection = db.getCollection<DB['preferences']>(
     COLLECTION.PREFERENCES
   );

@@ -27,6 +27,7 @@ export type ColorScheme = 'light' | 'dark' | 'system';
 
 export type DB = {
   preferences: {
+    version: '0.0.0';
     iconInTray: boolean;
     showOnlyLikedSnippets: boolean;
     showTags: boolean;
