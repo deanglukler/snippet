@@ -2,17 +2,22 @@ import _ from 'lodash';
 import { SNIPPET_SCHEMA } from '../../schema/SNIPPET_SCHEMA';
 import store from '../store';
 import { errorAndToast } from '../toast';
-import { SnippetMetaData } from '../../types';
+import { TagRenderer } from '../../types';
 
-const submit = () => {
-  const { body, title, tags } = store.getState().snippetUpdater;
+function getAllSnippets() {
+  window.electron.ipcRenderer.getAllSnippets().then((snippets) => {
+    store.getActions().snippets.set({ all: snippets });
+    return null;
+  });
+}
+
+function submit() {
+  const { body, title, tags } = store.getState().snippetEditor;
   const snippet = {
     body,
     title,
-    metadata: {
-      tags,
-      timestampMili: Date.now(),
-    },
+    tags,
+    liked: false,
   };
 
   try {
@@ -26,12 +31,25 @@ const submit = () => {
     .saveSnippet(snippet)
     .then(() => {
       clearSnippetUpdaterData();
+      getAllSnippets();
       return null;
     })
     .catch((err) => {
       console.error(err);
     });
-};
+}
+
+function deleteSnippet(snippetTitle: number) {
+  window.electron.ipcRenderer
+    .deleteSnippet(snippetTitle)
+    .then(() => {
+      getAllSnippets();
+      return null;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
 
 async function getBodyFromClipboard(): Promise<string> {
   let text = '';
@@ -48,25 +66,25 @@ async function getBodyFromClipboard(): Promise<string> {
 }
 
 async function setSnippetBodyFromClipboard() {
-  store.getActions().snippetUpdater.set({ body: await getBodyFromClipboard() });
+  store.getActions().snippetEditor.set({ body: await getBodyFromClipboard() });
 }
 
 async function setSnippetBodyPreviewFromClipboard() {
   store
     .getActions()
-    .snippetUpdater.set({ bodyPreview: await getBodyFromClipboard() });
+    .snippetEditor.set({ bodyPreview: await getBodyFromClipboard() });
 }
 
 function clearSnippetBodyPreview() {
-  store.getActions().snippetUpdater.set({ bodyPreview: '' });
+  store.getActions().snippetEditor.set({ bodyPreview: '' });
 }
 
 function setNewSnippetTitleToDefault() {
-  store.getActions().snippetUpdater.set({ title: 'Snippet Title...' });
+  store.getActions().snippetEditor.set({ title: 'Snippet Title...' });
 }
 
 function clearSnippetUpdaterData() {
-  store.getActions().snippetUpdater.set({ body: '', title: '', tags: [] });
+  store.getActions().snippetEditor.set({ body: '', title: '', tags: [] });
 }
 
 function initializeNew() {
@@ -77,42 +95,37 @@ function initializeNew() {
 
 function refreshTagOptions() {
   return window.electron.ipcRenderer.getTags().then((tags) => {
-    const currentTagOptions = store.getState().snippetSearch.tagOptions;
+    const currentTagOptions = store.getState().searchParams.tagOptions;
     if (!_.isEqual(tags, currentTagOptions)) {
-      store.getActions().snippetSearch.set({ tagOptions: tags });
+      store.getActions().searchParams.set({ tagOptions: tags });
     }
     return null;
   });
 }
 
-function searchTagClick(tag: string) {
-  const st = store.getState().snippetSearch.searchTags;
-  store.getActions().snippetSearch.set({ searchTags: [..._.xor(st, [tag])] });
+function searchTagClick(tag: TagRenderer) {
+  const st = store.getState().searchParams.searchTags;
+  if (st.findIndex((t) => t.$loki === tag.$loki) !== -1) {
+    store.getActions().searchParams.set({
+      searchTags: st.filter((t) => t.$loki !== tag.$loki),
+    });
+  } else {
+    store.getActions().searchParams.set({ searchTags: [...st, tag] });
+  }
 }
 
-async function updateSnippetMetadata(
-  snippetTitle: string,
-  metadata: Partial<SnippetMetaData>
-) {
-  const updatedMetadata =
-    await window.electron.ipcRenderer.updateSnippetMetadata({
-      snippetTitle,
-      metadata,
-    });
-  if (!updatedMetadata) {
-    return console.warn('snippet metadata is null and it shouldnt be');
-  }
-  const snippets = [...store.getState().snippetSearch.results];
-  const snippetIndex = snippets.findIndex((a) => a.title === snippetTitle);
-  if (snippetIndex > -1) {
-    snippets[snippetIndex].metadata = updatedMetadata;
-    store.getActions().snippetSearch.set({ results: snippets });
-  }
-  return null;
+async function updateSnippetLiked($loki: number, liked: boolean) {
+  await window.electron.ipcRenderer.updateSnippetLiked({
+    $loki,
+    liked,
+  });
+  getAllSnippets();
 }
 
 export default {
   submit,
+  getAllSnippets,
+  deleteSnippet,
   setSnippetBodyFromClipboard,
   setSnippetBodyPreviewFromClipboard,
   clearSnippetBodyPreview,
@@ -121,5 +134,5 @@ export default {
   clearSnippetUpdaterData,
   refreshTagOptions,
   searchTagClick,
-  updateSnippetMetadata,
+  updateSnippetLiked,
 };

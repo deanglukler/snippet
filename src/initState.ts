@@ -1,15 +1,13 @@
-import { DB } from './types';
+import { DBModels } from './types';
 
-const state: DB = Object.freeze({
-  preferences: {
-    version: '0.0.0',
-    iconInTray: true,
-    showOnlyLikedSnippets: false,
-    showTags: false,
-    colorScheme: 'system',
-  },
-});
-
-const getState = () => ({ ...state });
-
-export default getState;
+export default class InitState {
+  static get preferences(): DBModels['preferences'] {
+    return {
+      version: '0.0.0',
+      iconInTray: true,
+      showOnlyLikedSnippets: false,
+      showTags: false,
+      colorScheme: 'system',
+    };
+  }
+}

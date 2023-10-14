@@ -27,6 +27,8 @@ function getPopoverPosition(anchor: HTMLElement, popover: HTMLElement) {
   return position;
 }
 
+const POPUP_TIME = 750;
+
 const Popover: React.FC<PropsWithChildren<Props>> = ({
   content,
   children,
@@ -90,7 +92,7 @@ const Popover: React.FC<PropsWithChildren<Props>> = ({
       setPopOverPosition(getPopoverPosition(anchor, popover));
       setShow(true);
       return;
-    }, 400);
+    }, POPUP_TIME);
 
     const onMouseEvent = (event: MouseEvent) => {
       if (!anchorRef.current) {

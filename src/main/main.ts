@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { app } from 'electron';
-import mainGetTags from './snippet/mainGetTags';
 
 import appReady from './appReady';
 import initIpc from './initIpc';
@@ -45,4 +44,3 @@ createDirIfNone(SNIPPETS_DIR);
 // seed the database which will create the database if it doesn't exist (by sideeffect)
 seed();
 initIpc();
-mainGetTags();

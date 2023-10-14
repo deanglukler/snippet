@@ -1,28 +1,25 @@
 import SnippetHandlers from './snippet/SnippetMainIPCHandlers';
 import { ipcMain } from 'electron';
-import { INVOKERS_CHANNELS, IPCMainEventHandlerFn } from '../types';
+import { IPC, IPCHandler } from '../types';
 import PrefMainIPCHandlers from './preferences/PrefMainIPCHandlers';
+import TagHandlers from './snippet/TagHandlers';
+import getPreferences from './preferences/getPreferences';
 
-function mainIPCChannelHandler<
-  Channel extends string = INVOKERS_CHANNELS,
-  Handler extends IPCMainEventHandlerFn = () => void
->(channel: Channel, handler: Handler) {
+function ipcHandler<CH extends keyof IPC>(
+  channel: CH,
+  handler: IPCHandler<CH>
+) {
   ipcMain.handle(channel, handler);
 }
 
 export default function initIpc() {
-  mainIPCChannelHandler('snippet:save', SnippetHandlers.save);
-  mainIPCChannelHandler('snippet:copy', SnippetHandlers.copy);
-  mainIPCChannelHandler('snippet:delete', SnippetHandlers.delete);
-  mainIPCChannelHandler(
-    'snippet:update-metadata',
-    SnippetHandlers.updateSnippetMetadata
-  );
-  mainIPCChannelHandler('search:send', SnippetHandlers.search);
-  mainIPCChannelHandler('tags:get', SnippetHandlers.getTags);
-  mainIPCChannelHandler('preferences:get', PrefMainIPCHandlers.getPreferences);
-  mainIPCChannelHandler(
-    'preferences:update',
-    PrefMainIPCHandlers.updatePreference
-  );
+  ipcHandler('snippets:get-all', SnippetHandlers.getAllSnippets);
+  ipcHandler('snippet:save', SnippetHandlers.save);
+  ipcHandler('snippet:delete', SnippetHandlers.delete);
+  ipcHandler('snippet:update-liked', SnippetHandlers.updateLiked);
+  ipcHandler('tag:rename', TagHandlers.rename);
+  ipcHandler('tag:get-all', TagHandlers.selectAll);
+  ipcHandler('snippet:copy-to-clipboard', SnippetHandlers.copy);
+  ipcHandler('preferences:get', getPreferences);
+  ipcHandler('preferences:update', PrefMainIPCHandlers.updatePreference);
 }

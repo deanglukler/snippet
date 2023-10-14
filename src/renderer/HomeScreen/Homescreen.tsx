@@ -15,43 +15,22 @@ import { useA, useS } from '../store';
 import _ from 'lodash';
 import SnippetCreator from './SnippetCreator';
 import SearchTagList from './SearchTagList';
-import { SearchParams } from '../../types';
 import { useNavigate } from 'react-router-dom';
 import PreferencesActions from '../preferences/PreferencesActions';
+import useSnippetFetcher from '../hooks/useSnippetFetcher';
 
-const debouncedSearch = _.debounce((searchParams?: SearchParams) =>
-  window.electron.ipcRenderer.sendSearch(searchParams)
-);
 export default function Homescreen() {
   useIPC();
-  const setSnippetSearch = useA((a) => a.snippetSearch.set);
-  const snippetSearch = useS((s) => s.snippetSearch);
-  const snippetUpdater = useS((s) => s.snippetUpdater);
-  const snippetUpdaterActions = useA((a) => a.snippetUpdater);
+  const setSnippetSearch = useA((a) => a.searchParams.set);
+  const searchParams = useS((s) => s.searchParams);
+  const snippetEditor = useS((s) => s.snippetEditor);
+  const snippetUpdaterActions = useA((a) => a.snippetEditor);
   const prefs = useS((s) => s.preferences);
   const prefsActions = useA((a) => a.preferences);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    function setInitialStoreState() {
-      window.electron.ipcRenderer.sendSearch();
-    }
-    setInitialStoreState();
-  }, []);
-
-  useEffect(() => {
-    const searchTimer = setInterval(() => {
-      debouncedSearch({
-        text: snippetSearch.searchText,
-        tags: snippetSearch.searchTags,
-      });
-    }, 500);
-
-    return () => {
-      clearInterval(searchTimer);
-    };
-  });
+  useSnippetFetcher();
 
   useEffect(() => {
     SnippetActions.refreshTagOptions();
@@ -68,14 +47,14 @@ export default function Homescreen() {
     const tima = setInterval(async () => {
       try {
         const txt = await navigator.clipboard.readText();
-        if (txt && snippetUpdater.noTextInClipboard) {
+        if (txt && snippetEditor.noTextInClipboard) {
           snippetUpdaterActions.set({ noTextInClipboard: false });
         }
-        if (!txt && !snippetUpdater.noTextInClipboard) {
+        if (!txt && !snippetEditor.noTextInClipboard) {
           snippetUpdaterActions.set({ noTextInClipboard: true });
         }
       } catch (err) {
-        if (!snippetUpdater.noTextInClipboard) {
+        if (!snippetEditor.noTextInClipboard) {
           snippetUpdaterActions.set({ noTextInClipboard: true });
         }
       }
@@ -84,15 +63,15 @@ export default function Homescreen() {
     return () => {
       clearInterval(tima);
     };
-  }, [snippetUpdaterActions, snippetUpdater.noTextInClipboard]);
+  }, [snippetUpdaterActions, snippetEditor.noTextInClipboard]);
 
   function newSnippetButtonDisabled(): {
     disabled: boolean;
     text: string;
   } {
-    if (snippetUpdater.noTextInClipboard)
+    if (snippetEditor.noTextInClipboard)
       return { disabled: true, text: 'Copy Text to Create' };
-    if (snippetUpdater.body)
+    if (snippetEditor.body)
       return { disabled: true, text: 'Creation in Progress' };
     return { disabled: false, text: 'New Snippet' };
   }
@@ -143,7 +122,7 @@ export default function Homescreen() {
             onChange={(e) => {
               setSnippetSearch({ searchText: e.target.value });
             }}
-            value={snippetSearch.searchText}
+            value={searchParams.searchText}
             placeholder="Search snippets"
             style={{ width: '100%', maxWidth: 300 }}
           />

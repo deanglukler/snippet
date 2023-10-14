@@ -10,7 +10,7 @@ import AnimatedBorderBox from '../components/AnimatedBorderBox';
 import SnippetBody from '../components/SnippetBody';
 
 export default function () {
-  const snippetUpdater = useS((s) => s.snippetUpdater);
+  const snippetEditor = useS((s) => s.snippetEditor);
   const newSnippetTitleInputRef = useRef<InputRef>(null);
   const prevNewSnippetTitleInputRef = useRef<any>(null);
 
@@ -28,20 +28,20 @@ export default function () {
 
   return (
     <div>
-      {snippetUpdater.bodyPreview && (
+      {snippetEditor.bodyPreview && (
         <div style={{ position: 'sticky' }}>
           <AnimatedBorderBox>
             <div className="list-card">
               <Typography.Title level={3}>Clipboard Preview:</Typography.Title>
               <SnippetBody
-                body={snippetUpdater.bodyPreview}
+                body={snippetEditor.bodyPreview}
                 truncateHeight={500}
               />
             </div>
           </AnimatedBorderBox>
         </div>
       )}
-      {snippetUpdater.body && (
+      {snippetEditor.body && (
         <AnimatedBorderBox>
           <div
             style={{
@@ -59,9 +59,9 @@ export default function () {
                 bordered={false}
                 size="large"
                 style={{ fontWeight: 600, paddingLeft: 0 }}
-                value={snippetUpdater.title}
+                value={snippetEditor.title}
                 onChange={({ target }) =>
-                  store.getActions().snippetUpdater.set({ title: target.value })
+                  store.getActions().snippetEditor.set({ title: target.value })
                 }
               />
               <TagSelector />
@@ -73,7 +73,7 @@ export default function () {
                 onClick={SnippetActions.clearSnippetUpdaterData}
               />
               <Button
-                disabled={!snippetUpdater.isValid}
+                disabled={!snippetEditor.isValid}
                 type="primary"
                 icon={<CheckCircleOutlined />}
                 onClick={SnippetActions.submit}
@@ -84,7 +84,7 @@ export default function () {
           </div>
           <Divider />
           <div>
-            <SnippetBody body={snippetUpdater.body} truncateHeight={500} />
+            <SnippetBody body={snippetEditor.body} truncateHeight={500} />
           </div>
         </AnimatedBorderBox>
       )}

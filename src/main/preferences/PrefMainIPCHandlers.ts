@@ -1,20 +1,13 @@
 import { log } from 'console';
-import { DB, IPCMainHandlerFunction, PreferenceName } from '../../types';
-import getPreferences from './getPreferences';
+import { DBModels, IPCHandler } from '../../types';
 import _ from 'lodash';
 import connection from '../db/connection';
 import { COLLECTION } from '../db/collection';
-import initState from '../../initState';
+import InitState from '../../initState';
 
-const updatePreference: IPCMainHandlerFunction<
-  {
-    name: PreferenceName;
-    value: DB['preferences'][PreferenceName];
-  },
-  DB['preferences']
-> = async (_e, data) => {
+const updatePreference: IPCHandler<'preferences:update'> = async (_e, data) => {
   const db = await connection;
-  const prefsCollection = db.getCollection<DB['preferences']>(
+  const prefsCollection = db.getCollection<DBModels['preferences']>(
     COLLECTION.PREFERENCES
   );
   const prefs = prefsCollection.findOne();
@@ -24,7 +17,7 @@ const updatePreference: IPCMainHandlerFunction<
   if (!_.has(prefs, data.name)) {
     log(`cannot find prefs with name '${data.name}', adding now`);
     // @ts-ignore
-    prefs[data.name] = initState().preferences[data.name];
+    prefs[data.name] = InitState.preferences[data.name];
   }
   // @ts-ignore
   prefs[data.name] = data.value;
@@ -38,6 +31,5 @@ const updatePreference: IPCMainHandlerFunction<
 };
 
 export default {
-  getPreferences,
   updatePreference,
 };

@@ -1,31 +1,55 @@
-import { IpcMainInvokeEvent } from 'electron';
+export type DefaultChannels =
+  | 'IPC:ERROR_IN_MAIN'
+  | 'IPC:SUCCESS_IN_MAIN'
+  | 'IPC:ROUTE';
 
-export type INVOKERS_CHANNELS =
-  | 'snippet:save'
-  | 'snippet:update-metadata'
-  | 'search:send'
-  | 'tags:get'
-  | 'snippet:copy'
-  | 'snippet:delete'
-  | 'preferences:get'
-  | 'preferences:update';
+export type IPC = {
+  'snippets:get-all': {
+    invoke: void;
+    return: Snippets;
+  };
+  'snippet:save': {
+    invoke: SnippetPreSave;
+    return: void;
+  };
+  'snippet:delete': {
+    invoke: number;
+    return: void;
+  };
+  'snippet:update-liked': {
+    invoke: { $loki: number; liked: boolean };
+    return: void;
+  };
+  'tag:rename': {
+    invoke: { $loki: number; title: string };
+    return: void;
+  };
+  'tag:get-all': {
+    invoke: void;
+    return: TagList;
+  };
+  'snippet:copy-to-clipboard': {
+    invoke: string;
+    return: void;
+  };
+  'preferences:get': {
+    invoke: void;
+    return: DBModels['preferences'];
+  };
+  'preferences:update': {
+    invoke: { name: PreferenceName; value: any };
+    return: DBModels['preferences'];
+  };
+};
 
-export type ROUTES = '/' | '/preferences';
-
-export type IPCMainHandlerFunction<
-  DataIn = any,
-  Return = void,
-  E = IpcMainInvokeEvent
-> = (event: E, data: DataIn) => Promise<Return>;
-
-export type IPCMainEventHandlerFn = (
+export type IPCHandler<CH extends keyof IPC> = (
   event: Electron.IpcMainInvokeEvent,
-  ...args: any[]
-) => any;
+  payload: IPC[CH]['invoke']
+) => Promise<IPC[CH]['return']>;
 
-export type ColorScheme = 'light' | 'dark' | 'system';
+export type LokiItem<T> = T & LokiObj;
 
-export type DB = {
+export type DBModels = {
   preferences: {
     version: '0.0.0';
     iconInTray: boolean;
@@ -33,36 +57,50 @@ export type DB = {
     showTags: boolean;
     colorScheme: ColorScheme;
   };
+  tags: {
+    title: string;
+    snippetIds: number[];
+  };
+  snippets: {
+    title: string;
+    body: string;
+    liked: boolean;
+  };
 };
 
-export type PreferenceName = keyof DB['preferences'];
+export type PreferenceName = keyof DBModels['preferences'];
 
-export interface SnippetMetaData {
-  tags: string[];
-  timestampMili: number;
+export type Snippets = {
+  [key: number]: SnippetRenderer;
+};
+
+type SnippetBase = {
+  title: string;
+  body: string;
   liked: boolean;
-}
-
-export interface SnippetData {
-  title: string;
-  body: string;
-  metadata: SnippetMetaData;
-}
-
-export interface SnippetDataSerialized {
-  title: string;
-  body: string;
-  metadata: string;
-}
-
-export type SnippetMetadataUpdate = {
-  snippetTitle: string;
-  metadata: Partial<SnippetMetaData>;
 };
 
-export type TagList = string[];
+export type SnippetRenderer = SnippetBase & {
+  $loki: number;
+  tags: TagList;
+};
+
+export type SnippetPreSave = SnippetBase & {
+  tags: string[];
+};
+
+export type IPCUpdateSnippetLiked = { snippetTitle: string; liked: boolean };
+
+export type TagRenderer = LokiItem<DBModels['tags']>;
+export type TagList = TagRenderer[];
 
 export type SearchParams = {
   text?: string;
-  tags?: string[];
+  tags?: TagList;
 };
+
+//
+
+// config
+export type ROUTES = '/' | '/preferences';
+export type ColorScheme = 'light' | 'dark' | 'system';

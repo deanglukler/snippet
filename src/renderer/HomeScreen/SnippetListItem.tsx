@@ -4,12 +4,45 @@ import DeleteButton from '../components/DeleteButton';
 import SnippetBody from '../components/SnippetBody';
 import { errorAndToast, successToast } from '../toast';
 import { useRef } from 'react';
-import { SnippetData } from '../../types';
+import { SnippetRenderer } from '../../types';
 import SnippetActions from '../snippet/SnippetActions';
+import { useS } from '../store';
+import splitStringInclusive from '../util/splitStringInclusive';
 
-const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
-  const { title, body, metadata } = snippet;
+function highlightText(text: string, highlight: string) {
+  if (highlight) {
+    const texts = splitStringInclusive(text, highlight);
+
+    const nextInnerJsx = texts.reduce((jsx, str) => {
+      if (str === highlight) {
+        return (
+          <>
+            {jsx}
+            <span style={{ backgroundColor: 'yellow' }}>{str}</span>
+          </>
+        );
+      } else {
+        return (
+          <>
+            {jsx}
+            {str}
+          </>
+        );
+      }
+    }, <></>);
+    return nextInnerJsx;
+  } else {
+    return text;
+  }
+}
+
+const SnippetListItem: React.FC<{ snippet: SnippetRenderer }> = ({
+  snippet,
+}) => {
+  const { title, body, liked, tags, $loki } = snippet;
+  const searchParams = useS((s) => s.searchParams);
   const ref = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLElement>(null);
 
   function copySnippet(b: string) {
     window.electron.ipcRenderer
@@ -33,28 +66,32 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
           height: '55px',
         }}
       >
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {title}
+        <Typography.Title ref={titleRef} level={4} style={{ margin: 0 }}>
+          {highlightText(title, searchParams.searchText.trim())}
         </Typography.Title>
         <div>
-          {!metadata.liked && (
+          <div style={{ display: 'inline', position: 'relative' }}>
             <Button
               onClick={() => {
-                SnippetActions.updateSnippetMetadata(title, { liked: true });
+                SnippetActions.updateSnippetLiked($loki, true);
               }}
               type="ghost"
               icon={<HeartOutlined />}
             />
-          )}
-          {metadata.liked && (
-            <Button
-              onClick={() => {
-                SnippetActions.updateSnippetMetadata(title, { liked: false });
-              }}
-              type="ghost"
-              icon={<HeartFilled />}
-            />
-          )}
+            {liked && (
+              <Button
+                onClick={() => {
+                  SnippetActions.updateSnippetLiked($loki, false);
+                }}
+                type="ghost"
+                icon={<HeartFilled />}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                }}
+              />
+            )}
+          </div>
           <Button
             type="text"
             icon={<CopyOutlined />}
@@ -64,7 +101,7 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
           </Button>
         </div>
       </div>
-      {metadata.tags.length > 0 && (
+      {tags.length > 0 && (
         <div
           style={{
             display: 'flex',
@@ -73,10 +110,10 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
             paddingBottom: '10px',
           }}
         >
-          {metadata.tags.map((tag) => {
+          {tags.map((tag) => {
             return (
-              <Typography.Text key={tag} type="secondary">
-                # {tag}
+              <Typography.Text key={tag.title} type="secondary">
+                # {tag.title}
               </Typography.Text>
             );
           })}
@@ -84,12 +121,15 @@ const SnippetListItem: React.FC<{ snippet: SnippetData }> = ({ snippet }) => {
       )}
       <Divider style={{ margin: '10px 0' }} />
       <div>
-        <SnippetBody body={body} refToScrollOnCollapse={ref} />
+        <SnippetBody
+          body={highlightText(body, searchParams.searchText.trim())}
+          refToScrollOnCollapse={ref}
+        />
       </div>
       <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
         <DeleteButton
           action={() => {
-            window.electron.ipcRenderer.deleteSnippet(title);
+            SnippetActions.deleteSnippet($loki);
           }}
         />
       </div>

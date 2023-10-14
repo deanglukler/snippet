@@ -1,16 +1,11 @@
-import { DB } from '../../types';
-import { COLLECTION } from '../db/collection';
-import connection from '../db/connection';
+import db from '../db/db';
 
 export default async function () {
-  const db = await connection;
-  const prefsCollection = db.getCollection<DB['preferences']>(
-    COLLECTION.PREFERENCES
-  );
+  const res = await db.selectBy('preferences', { version: '0.0.0' });
+  const prefs = res[0];
 
-  const prefs = prefsCollection.findOne();
   if (!prefs) {
-    throw new Error('preferences not found');
+    throw new Error('preferences not found :S');
   }
   return prefs;
 }

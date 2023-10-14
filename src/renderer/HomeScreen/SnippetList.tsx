@@ -1,23 +1,19 @@
 import { InputRef, Typography } from 'antd';
 import SnippetActions from '../snippet/SnippetActions';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useS } from '../store';
 import './SnippetList.css';
 import SnippetListItem from './SnippetListItem';
 import _ from 'lodash';
+import useSnippetLists from '../hooks/useSnippetLists';
 
 export default function () {
-  const snippetUpdater = useS((s) => s.snippetUpdater);
-  const { results } = useS((s) => s.snippetSearch);
+  const snippetLists = useSnippetLists();
+  const snippetEditor = useS((s) => s.snippetEditor);
   const newSnippetTitleInputRef = useRef<InputRef>(null);
   const prevNewSnippetTitleInputRef = useRef<any>(null);
 
-  const sortedResults = useMemo(() => {
-    const sorted = _.sortBy(results, (r) => {
-      return r.metadata.timestampMili;
-    });
-    return _.reverse(sorted);
-  }, [results]);
+  const noResults = snippetLists.flatMap((x) => x).length === 0;
 
   useEffect(() => {
     if (
@@ -33,7 +29,7 @@ export default function () {
 
   return (
     <div>
-      {!snippetUpdater.body && results.length === 0 && (
+      {!snippetEditor.body && noResults && (
         <Typography.Paragraph>
           No Snippets Yet.{' '}
           <Typography.Link onClick={SnippetActions.initializeNew}>
@@ -42,12 +38,14 @@ export default function () {
         </Typography.Paragraph>
       )}
 
-      {sortedResults.map((snippet) => {
-        return (
-          <React.Fragment key={snippet.title}>
-            <SnippetListItem snippet={snippet} />
-          </React.Fragment>
-        );
+      {snippetLists.map((list) => {
+        return list.map((snippet) => {
+          return (
+            <React.Fragment key={snippet.title}>
+              <SnippetListItem snippet={snippet} />
+            </React.Fragment>
+          );
+        });
       })}
     </div>
   );

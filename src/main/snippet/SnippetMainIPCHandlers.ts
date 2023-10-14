@@ -1,141 +1,83 @@
 import { clipboard } from 'electron';
-import { existsSync, writeFileSync, readFileSync } from 'fs';
-import { rm } from 'fs/promises';
-import path from 'path';
-import { METADATA_FILENAME, SNIPPETS_DIR } from '../../CONST';
 import sendErrorToRenderer from '../toRenderer/errorToRenderer';
 import successToRenderer from '../toRenderer/successToRenderer';
-import log from '../log';
 import logAndThrow from '../logAndThrow';
-import {
-  IPCMainHandlerFunction,
-  SearchParams,
-  SnippetData,
-  SnippetDataSerialized,
-  SnippetMetaData,
-  SnippetMetadataUpdate,
-  TagList,
-} from '../../types';
+import { IPCHandler, DBModels, LokiItem, Snippets } from '../../types';
 
-import dataToRenderer from '../toRenderer/dataToRenderer';
-import findSnippets from './findSnippets';
-import mainGetTags from './mainGetTags';
-import { createDirIfNone } from '../util';
+import TagHandlers from './TagHandlers';
+import db from '../db/db';
 
-function getSnipDirPath(title: string) {
-  return path.join(SNIPPETS_DIR, title);
-}
+const getAllSnippets: IPCHandler<'snippets:get-all'> = async () => {
+  const allTags = await db.selectAll('tags');
 
-const saveSnippet: IPCMainHandlerFunction = async (
-  _event,
-  snippet: SnippetData
-) => {
-  function writeSnippet() {
-    const snipDir = getSnipDirPath(snippet.title);
-    createDirIfNone(snipDir);
+  const snippetWithTags = (s: LokiItem<DBModels['snippets']>) => {
+    const tagsList = allTags.filter((t) => t.snippetIds.includes(s.$loki));
 
-    try {
-      writeFileSync(path.join(snipDir, snippet.title), snippet.body);
-      writeFileSync(
-        path.join(snipDir, METADATA_FILENAME),
-        JSON.stringify(snippet.metadata)
-      );
-    } catch (error) {
-      logAndThrow('Error writing snippet file.', error);
-    }
-  }
+    return {
+      ...s,
+      tags: tagsList,
+    };
+  };
 
+  const snippets: Snippets = {};
+
+  const allSnippets = await db.selectAll('snippets');
+  allSnippets.forEach((s) => {
+    snippets[s.$loki] = snippetWithTags(s);
+  });
+
+  return snippets;
+};
+
+const saveSnippet: IPCHandler<'snippet:save'> = async (_event, snippet) => {
   try {
-    createDirIfNone(SNIPPETS_DIR);
+    const existingWithSameTitle = await db.selectBy('snippets', {
+      title: snippet.title,
+    });
 
-    if (existsSync(getSnipDirPath(snippet.title))) {
+    if (existingWithSameTitle.length > 0) {
       logAndThrow('Snippet with this title already exists');
     }
 
-    writeSnippet();
+    const item = await db.insert('snippets', {
+      body: snippet.body,
+      title: snippet.title,
+      liked: snippet.liked,
+    });
+
+    for (let i = 0; i < snippet.tags.length; i++) {
+      await TagHandlers.joinToSnippet(item, snippet.tags[i]);
+    }
+
     successToRenderer('Saved!');
-    return;
   } catch (error) {
     sendErrorToRenderer(error);
     throw error;
   }
 };
 
-const copySnippet: IPCMainHandlerFunction<string, void> = async (
+const deleteSnippet: IPCHandler<'snippet:delete'> = async (_event, $loki) => {
+  await db.deleteBy('snippets', { $loki });
+};
+
+const updateLiked: IPCHandler<'snippet:update-liked'> = async (
+  _event,
+  payload
+) => {
+  await db.update('snippets', payload.$loki, { liked: payload.liked });
+};
+
+const copySnippet: IPCHandler<'snippet:copy-to-clipboard'> = async (
   _event,
   body: string
 ) => {
-  return clipboard.writeText(body);
-};
-
-const deleteSnippet: IPCMainHandlerFunction<string> = async (_event, title) => {
-  const snippetDirPath = getSnipDirPath(title);
-
-  if (!existsSync(snippetDirPath)) {
-    logAndThrow("Can't find snippet to delete");
-  }
-
-  await rm(snippetDirPath, { recursive: true });
-};
-
-const search: IPCMainHandlerFunction<SearchParams | undefined> = async (
-  _event,
-  searchParams
-) => {
-  try {
-    const returnableResults: SnippetDataSerialized[] = await findSnippets(
-      searchParams
-    );
-
-    dataToRenderer('SEARCH:RESULTS', returnableResults);
-  } catch (error) {
-    log(error);
-    sendErrorToRenderer(error);
-  }
-};
-
-const getTags: IPCMainHandlerFunction<null, TagList> = async (_event) => {
-  try {
-    const tags = await mainGetTags();
-    return tags;
-  } catch (error) {
-    sendErrorToRenderer(error);
-    return [];
-  }
-};
-
-const updateSnippetMetadata: IPCMainHandlerFunction<
-  SnippetMetadataUpdate,
-  SnippetMetaData | null
-> = async (_event, updateData) => {
-  try {
-    const snipDir = getSnipDirPath(updateData.snippetTitle);
-    const metadataPath = path.join(snipDir, METADATA_FILENAME);
-    const metadataJSON = readFileSync(metadataPath, 'utf8');
-    const metadata = JSON.parse(metadataJSON);
-
-    const updatedMetadata: SnippetMetaData = {
-      ...metadata,
-      ...updateData.metadata,
-    };
-    writeFileSync(
-      path.join(snipDir, METADATA_FILENAME),
-      JSON.stringify(updatedMetadata)
-    );
-
-    return updatedMetadata;
-  } catch (error) {
-    log(error);
-    sendErrorToRenderer(error);
-    return null;
-  }
+  clipboard.writeText(body);
 };
 
 export default {
+  getAllSnippets,
   copy: copySnippet,
   save: saveSnippet,
   delete: deleteSnippet,
-  search,
-  getTags,
-  updateSnippetMetadata,
+  updateLiked,
 };

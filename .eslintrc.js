@@ -42,6 +42,8 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     'consistent-return': 'off',
     'no-useless-return': 'off',
+    'promise/catch-or-return': 'off',
+    'no-else-return': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

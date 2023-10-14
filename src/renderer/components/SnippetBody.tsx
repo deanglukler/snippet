@@ -4,7 +4,7 @@ import { useTheme } from '../hooks';
 import './SnippetBody.css';
 
 const SnippetBody: React.FC<{
-  body: string;
+  body: ReactNode;
   truncateHeight?: number;
   refToScrollOnCollapse?: React.RefObject<HTMLDivElement>;
 }> = ({ body, truncateHeight = 170, refToScrollOnCollapse }) => {

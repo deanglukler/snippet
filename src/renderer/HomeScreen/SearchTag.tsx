@@ -3,26 +3,37 @@ import { useS } from '../store';
 import SnippetActions from '../snippet/SnippetActions';
 import { useRef, useState } from 'react';
 import Popover from '../components/Popover';
-import { useTheme } from '../hooks';
 import { EditOutlined } from '@ant-design/icons';
+import { TagRenderer } from '../../types';
+import TagActions from '../snippet/TagActions';
 
-const SearchTag: React.FC<{ tag: string }> = ({ tag }) => {
-  const snippetSearch = useS((s) => s.snippetSearch);
-  const isActiveInSearch = snippetSearch.searchTags.includes(tag);
-  const theme = useTheme();
+const SearchTag: React.FC<{ tag: TagRenderer }> = ({ tag }) => {
+  const searchParams = useS((s) => s.searchParams);
+  const isActiveInSearch = searchParams.searchTags.includes(tag);
 
-  const [renameValue, setRenameValue] = useState(tag);
+  const [renameValue, setRenameValue] = useState(tag.title);
   const [renaming, setRenaming] = useState(false);
+  const [renameLoading, setRenameLoading] = useState(false);
 
   const ref = useRef<HTMLAnchorElement | null>(null);
+
+  async function handleRenameTag() {
+    setRenameLoading(true);
+    await TagActions.rename(tag.$loki, renameValue);
+    await SnippetActions.getAllSnippets();
+    setRenameLoading(false);
+    handleResetRenaming();
+  }
+
+  function handleResetRenaming() {
+    setRenameValue(tag.title);
+    setRenaming(false);
+  }
 
   return (
     <Popover
       anchorRef={ref}
-      onBlur={() => {
-        setRenameValue(tag);
-        setRenaming(false);
-      }}
+      onBlur={handleResetRenaming}
       content={
         <Card
           size="small"
@@ -33,7 +44,7 @@ const SearchTag: React.FC<{ tag: string }> = ({ tag }) => {
           }}
         >
           <Typography.Paragraph type="secondary">
-            Tag: {tag}
+            Tag: {tag.title}
           </Typography.Paragraph>
           {renaming && (
             <Input
@@ -67,7 +78,9 @@ const SearchTag: React.FC<{ tag: string }> = ({ tag }) => {
             {renaming && (
               <Button
                 size="small"
-                disabled={renameValue.length === 0 || renameValue === tag}
+                disabled={renameValue.length === 0 || renameValue === tag.title}
+                onClick={handleRenameTag}
+                loading={renameLoading}
               >
                 Save
               </Button>
@@ -80,7 +93,7 @@ const SearchTag: React.FC<{ tag: string }> = ({ tag }) => {
         ref={ref}
         onClick={() => SnippetActions.searchTagClick(tag)}
         type="secondary"
-        key={tag}
+        key={tag.$loki}
         style={Object.assign(
           {
             fontWeight: isActiveInSearch ? 600 : 'unset',
@@ -100,7 +113,7 @@ const SearchTag: React.FC<{ tag: string }> = ({ tag }) => {
               }
         )}
       >
-        # {tag}
+        # {tag.title}
       </Typography.Link>
     </Popover>
   );

@@ -1,50 +1,18 @@
 import { useEffect } from 'react';
-import { useA, useS } from '../store';
-import { SnippetData, SnippetDataSerialized } from '../../types';
+import { useA } from '../store';
 import _ from 'lodash';
-import safelyParseMetadata from '../snippet/safelyParseSnippetMetadata';
 import { useNavigate } from 'react-router-dom';
 import log from '../../main/log';
-import initState from '../../initState';
+import InitState from '../../initState';
 
 export function useIPC() {
-  const snippetSearchActions = useA((a) => a.snippetSearch);
-  const snippetSearchResults = useS((s) => s.snippetSearch.results);
   const prefsActions = useA((a) => a.preferences);
-
-  useEffect(() => {
-    const off = window.electron.ipcRenderer.on('SEARCH:RESULTS', (args) => {
-      const nextResults = args as SnippetDataSerialized[];
-      let resultsAreTheSame = true;
-      if (snippetSearchResults.length !== nextResults.length)
-        resultsAreTheSame = false;
-
-      if (resultsAreTheSame) {
-        const currentNamesList = snippetSearchResults.map((x) => x.title);
-        const nextNamesList = nextResults.map((x) => x.title);
-
-        if (!_.isEqual(currentNamesList, nextNamesList)) {
-          resultsAreTheSame = false;
-        }
-      }
-
-      const nextResultsParsed: SnippetData[] = nextResults.map((res) => {
-        return { ...res, metadata: safelyParseMetadata(res.metadata) };
-      });
-
-      if (!resultsAreTheSame) {
-        snippetSearchActions.set({ results: nextResultsParsed });
-      }
-    });
-
-    return off;
-  }, [snippetSearchActions, snippetSearchResults]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const off = window.electron.ipcRenderer.on('IPC:ROUTE', (msg) => {
-      navigate(msg);
+      navigate(msg as string);
     });
 
     return off;
@@ -55,7 +23,7 @@ export function useIPC() {
       .getPrefs()
       .then((prefs) => {
         const nextPrefs = {};
-        for (const k in initState().preferences) {
+        for (const k in InitState.preferences) {
           // @ts-ignore
           if (prefs[k]) {
             // @ts-ignore

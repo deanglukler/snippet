@@ -7,8 +7,8 @@ import {
   State,
 } from 'easy-peasy';
 import { createLogger } from 'redux-logger';
-import { DB, SnippetData } from '../types';
-import initState from '../initState';
+import { DBModels, SnippetRenderer, Snippets, TagList } from '../types';
+import InitState from '../initState';
 
 class ActionsBase<T extends object = never> {
   set = action<T, Partial<T>>((state, setter) => {
@@ -21,12 +21,16 @@ class ActionsBase<T extends object = never> {
   });
 }
 
-class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
+class SnippetsModel extends ActionsBase<State<SnippetsModel>> {
+  all: Snippets = {};
+}
+
+class SnippetEditorModel extends ActionsBase<State<SnippetEditorModel>> {
   body = '';
   title = '';
   tags: string[] = [];
-  isValid: Computed<SnippetUpdaterModel, boolean> = computed<
-    SnippetUpdaterModel,
+  isValid: Computed<SnippetEditorModel, boolean> = computed<
+    SnippetEditorModel,
     boolean
   >((state) => {
     if (!state.title) return false;
@@ -37,32 +41,34 @@ class SnippetUpdaterModel extends ActionsBase<State<SnippetUpdaterModel>> {
   noTextInClipboard = true;
 }
 
-class SnippetSearchModel extends ActionsBase<State<SnippetSearchModel>> {
+class SearchParamsModel extends ActionsBase<State<SearchParamsModel>> {
   searchText = '';
-  searchTags: string[] = [];
-  tagOptions: string[] = [];
-  results: SnippetData[] = [];
+  searchTags: TagList = [];
+  tagOptions: TagList = [];
 }
 
 class PreferencesModel extends ActionsBase<State<PreferencesModel>> {
-  iconInTray: DB['preferences']['iconInTray'] =
-    initState().preferences.iconInTray;
-  showOnlyLikedSnippets: DB['preferences']['showOnlyLikedSnippets'] =
-    initState().preferences.showOnlyLikedSnippets;
-  showTags: DB['preferences']['showTags'] = initState().preferences.showTags;
-  colorScheme: DB['preferences']['colorScheme'] =
-    initState().preferences.colorScheme;
+  iconInTray: DBModels['preferences']['iconInTray'] =
+    InitState.preferences.iconInTray;
+  showOnlyLikedSnippets: DBModels['preferences']['showOnlyLikedSnippets'] =
+    InitState.preferences.showOnlyLikedSnippets;
+  showTags: DBModels['preferences']['showTags'] =
+    InitState.preferences.showTags;
+  colorScheme: DBModels['preferences']['colorScheme'] =
+    InitState.preferences.colorScheme;
 }
 
 interface StoreModel {
-  snippetUpdater: SnippetUpdaterModel;
-  snippetSearch: SnippetSearchModel;
+  snippets: SnippetsModel;
+  snippetEditor: SnippetEditorModel;
+  searchParams: SearchParamsModel;
   preferences: PreferencesModel;
 }
 
 const storeModel: StoreModel = {
-  snippetUpdater: { ...new SnippetUpdaterModel() },
-  snippetSearch: { ...new SnippetSearchModel() },
+  snippets: { ...new SnippetsModel() },
+  snippetEditor: { ...new SnippetEditorModel() },
+  searchParams: { ...new SearchParamsModel() },
   preferences: { ...new PreferencesModel() },
 };
 

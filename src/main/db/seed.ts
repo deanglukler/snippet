@@ -1,8 +1,7 @@
-import { DB } from '../../types';
 import log from '../log';
 import { COLLECTION } from './collection';
 import db from './db';
-import initState from '../../initState';
+import InitState from '../../initState';
 
 export default async function seed() {
   log('Checking and seeding database...');
@@ -10,8 +9,16 @@ export default async function seed() {
   for (const key in COLLECTION) {
     if (key === 'PREFERENCES') {
       await db.insert('preferences', {
-        ...initState()[key as keyof DB],
+        ...InitState.preferences,
       });
+      continue;
+    }
+
+    if (key === 'TAGS') {
+      continue;
+    }
+
+    if (key === 'SNIPPETS') {
       continue;
     }
 

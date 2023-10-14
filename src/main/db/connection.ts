@@ -1,7 +1,19 @@
-import fs from 'fs';
 import { DATABASE_PATH } from '../../CONST';
 import Loki from 'lokijs';
 import { COLLECTION } from './collection';
+import log from '../log';
+
+function checkDatabaseCollections(db: Loki) {
+  for (const key in COLLECTION) {
+    log('Checking for existance of collection ' + COLLECTION[key]);
+    if (!db.getCollection(COLLECTION[key])) {
+      log('Collection ' + COLLECTION[key] + ' not found, creating...');
+      db.addCollection(COLLECTION[key]);
+    }
+  }
+
+  log('Collections all exist!');
+}
 
 class Connection {
   private static instance: Connection;
@@ -17,36 +29,16 @@ class Connection {
     return connection;
   }
 
-  private exists = false;
   private db: Promise<Loki> | null = null;
 
   constructor() {
-    if (fs.existsSync(DATABASE_PATH)) {
-      this.exists = true;
-    }
-
     this.db = new Promise<Loki>((resolve) => {
       const db = new Loki(DATABASE_PATH);
       db.loadDatabase({}, () => {
-        this.initDatabaseIfNecessary(db);
+        checkDatabaseCollections(db);
         resolve(db);
       });
     });
-  }
-
-  private initDatabaseIfNecessary(db: Loki) {
-    if (!this.exists) {
-      db.addCollection(COLLECTION.PREFERENCES);
-
-      // check if all collections are present or throw
-      for (const key in COLLECTION) {
-        if (!db.getCollection(COLLECTION[key])) {
-          throw new Error(`Collection ${COLLECTION[key]} not found`);
-        }
-      }
-
-      this.exists = true;
-    }
   }
 }
 

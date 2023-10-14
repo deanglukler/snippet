@@ -4,7 +4,7 @@ import SearchTag from './SearchTag';
 import { Fragment } from 'react';
 
 const SearchTagList: React.FC = () => {
-  const snippetSearch = useS((s) => s.snippetSearch);
+  const searchParams = useS((s) => s.searchParams);
 
   return (
     <div>
@@ -17,14 +17,14 @@ const SearchTagList: React.FC = () => {
           alignItems: 'baseline',
         }}
       >
-        {snippetSearch.tagOptions.length === 0 && (
+        {searchParams.tagOptions.length === 0 && (
           <Typography.Text style={{ marginLeft: 10 }} type="secondary">
             No Tags
           </Typography.Text>
         )}
-        {snippetSearch.tagOptions.map((tag) => {
+        {searchParams.tagOptions.map((tag) => {
           return (
-            <Fragment key={tag}>
+            <Fragment key={tag.title}>
               <SearchTag tag={tag} />
             </Fragment>
           );
