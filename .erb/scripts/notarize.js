@@ -1,5 +1,7 @@
 const { notarize } = require('@electron/notarize');
 const { build } = require('../../package.json');
+const dotenv = require('dotenv');
+dotenv.config();
 
 exports.default = async function notarizeMacos(context) {
   const { electronPlatformName, appOutDir } = context;
