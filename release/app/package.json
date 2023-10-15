@@ -3,7 +3,7 @@
   "name": "Snippet",
   "description": "Reusable Text & Code",
   "author": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
     "postinstall": "npm run rebuild && npm run link-modules",
