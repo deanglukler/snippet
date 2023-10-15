@@ -1,7 +1,7 @@
 {
   "main": "./dist/main/main.js",
   "name": "Snippet",
-  "description": "Reusable Text & Code",
+  "description": "The copy and paste essentials",
   "author": "",
   "version": "0.1.0",
   "scripts": {
