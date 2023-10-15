@@ -21,6 +21,8 @@ const SnippetBody: React.FC<{
           whiteSpace: 'pre-wrap',
           fontSize: '0.9rem',
           lineHeight: '1.4',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
         }}
       >
         {body}

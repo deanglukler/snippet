@@ -109,93 +109,90 @@ export default function Homescreen() {
         padding: '0 10px',
       }}
     >
-      <div>
-        <div
-          style={{
-            gridRow: 'header / new-snippet',
-            display: 'flex',
-            justifyContent: 'space-between',
-            paddingTop: 25,
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingTop: 25,
+        }}
+      >
+        <Input
+          onChange={(e) => {
+            setSnippetSearch({ searchText: e.target.value });
           }}
-        >
-          <Input
-            onChange={(e) => {
-              setSnippetSearch({ searchText: e.target.value });
-            }}
-            value={searchParams.searchText}
-            placeholder="Search snippets"
-            style={{ width: '100%', maxWidth: 300 }}
-          />
-          <div style={{ display: 'flex' }}>
-            {prefs.showOnlyLikedSnippets && (
-              <Tooltip title="Show All">
-                <Button
-                  onClick={() => showOnlyLikedSnippetsUpdater(false)}
-                  shape="circle"
-                  type="primary"
-                  icon={<HeartTwoTone />}
-                />
-              </Tooltip>
-            )}
-            {!prefs.showOnlyLikedSnippets && (
-              <Tooltip title="Only Liked">
-                <Button
-                  onClick={() => showOnlyLikedSnippetsUpdater(true)}
-                  type="ghost"
-                  shape="circle"
-                  icon={<HeartOutlined />}
-                />
-              </Tooltip>
-            )}
-            {prefs.showTags && (
-              <Tooltip title="Hide Tags">
-                <Button
-                  onClick={() => showTagsUpdater(false)}
-                  shape="circle"
-                  type="primary"
-                  icon={<TagsTwoTone />}
-                />
-              </Tooltip>
-            )}
-            {!prefs.showTags && (
-              <Tooltip title="Show Tags">
-                <Button
-                  onClick={() => showTagsUpdater(true)}
-                  type="ghost"
-                  shape="circle"
-                  icon={<TagsOutlined />}
-                />
-              </Tooltip>
-            )}
-            <Tooltip title="Preferences">
+          value={searchParams.searchText}
+          placeholder="Search snippets"
+          style={{ width: '100%', maxWidth: 300 }}
+        />
+        <div style={{ display: 'flex' }}>
+          {prefs.showOnlyLikedSnippets && (
+            <Tooltip title="Show All">
               <Button
-                onClick={() => {
-                  navigate('/preferences');
-                }}
-                type="ghost"
+                onClick={() => showOnlyLikedSnippetsUpdater(false)}
                 shape="circle"
-                icon={<SettingOutlined />}
+                type="primary"
+                icon={<HeartTwoTone />}
               />
             </Tooltip>
+          )}
+          {!prefs.showOnlyLikedSnippets && (
+            <Tooltip title="Only Liked">
+              <Button
+                onClick={() => showOnlyLikedSnippetsUpdater(true)}
+                type="ghost"
+                shape="circle"
+                icon={<HeartOutlined />}
+              />
+            </Tooltip>
+          )}
+          {prefs.showTags && (
+            <Tooltip title="Hide Tags">
+              <Button
+                onClick={() => showTagsUpdater(false)}
+                shape="circle"
+                type="primary"
+                icon={<TagsTwoTone />}
+              />
+            </Tooltip>
+          )}
+          {!prefs.showTags && (
+            <Tooltip title="Show Tags">
+              <Button
+                onClick={() => showTagsUpdater(true)}
+                type="ghost"
+                shape="circle"
+                icon={<TagsOutlined />}
+              />
+            </Tooltip>
+          )}
+          <Tooltip title="Preferences">
             <Button
-              type="dashed"
-              icon={<PlusOutlined />}
-              onClick={SnippetActions.initializeNew}
-              onMouseEnter={SnippetActions.setSnippetBodyPreviewFromClipboard}
-              onMouseLeave={SnippetActions.clearSnippetBodyPreview}
-              disabled={newSnippetButtonDisabled().disabled}
-              style={{ marginLeft: 10 }}
-            >
-              {newSnippetButtonDisabled().text}
-            </Button>
-          </div>
+              onClick={() => {
+                navigate('/preferences');
+              }}
+              type="ghost"
+              shape="circle"
+              icon={<SettingOutlined />}
+            />
+          </Tooltip>
+          <Button
+            type="dashed"
+            icon={<PlusOutlined />}
+            onClick={SnippetActions.initializeNew}
+            onMouseEnter={SnippetActions.setSnippetBodyPreviewFromClipboard}
+            onMouseLeave={SnippetActions.clearSnippetBodyPreview}
+            disabled={newSnippetButtonDisabled().disabled}
+            style={{ marginLeft: 10 }}
+          >
+            {newSnippetButtonDisabled().text}
+          </Button>
         </div>
       </div>
       <div style={{ gridRow: 'search' }}>
         {prefs.showTags && <SearchTagList />}
         <Divider />
       </div>
-      <div style={{ gridRow: 'new-snippet' }}>
+      <div style={{ gridRow: 'new-snippet', overflow: 'hidden' }}>
         <SnippetCreator />
       </div>
       <div
