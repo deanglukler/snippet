@@ -13,3 +13,5 @@ To package apps for the local platform:
 ```bash
 npm run package
 ```
+
+### testing a push with sourcetree
