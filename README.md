@@ -2,6 +2,10 @@
 
 The application's primary function is to provide quick and easy access to text fragments that the user frequently copies and pastes. Whether it's code snippets, standard email responses, or any other repetitive text elements, this application will help you save time and increase productivity by eliminating the need for constant manual copying and pasting.
 
+### Download Installers (MacOS Intel/M1)
+
+[Download .dmg](https://drive.google.com/drive/folders/1CEDELDaCL1NRZvfACPLpxAVFd56EJ0K-?usp=sharing)
+
 ## Brief Demo
 
 ![snippet-demo](https://github.com/deanglukler/snippet/assets/32249655/561e84b4-4538-4c3e-a51d-a3eda6487e86)
@@ -33,10 +37,6 @@ To start with the application:
 4. To start the app in the development environment, use the command `npm start`
 
 For Packaging the application for production, run `npm run package`.
-
-```bash
-npm run package
-```
 
 ## Folders and Project StructureProject Structure
 
