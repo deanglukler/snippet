@@ -10,8 +10,6 @@ The application's primary function is to provide quick and easy access to text f
 
 ![snippet-demo](https://github.com/deanglukler/snippet/assets/32249655/561e84b4-4538-4c3e-a51d-a3eda6487e86)
 
----
-
 ## Overview
 
 ### Technology
